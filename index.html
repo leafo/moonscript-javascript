@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script type="text/javascript" src="worker.js"></script>
+	<script type="text/javascript">
+
+    window.onload = function() {
+      console.log(printer.get_str());
+      $ = function() {
+        return document.getElementById.apply(document, arguments);
+      }
+
+      $("compile").onclick = function() {
+        var start = new Date;
+        var out = compile_moon($("input").value);
+        $("out").innerHTML = out;
+        $("time").innerHTML = new Date - start;
+      }
+
+      $("run").onclick = function() {
+        var start = new Date;
+        var out = execute_moon($("input").value);
+        $("out").innerHTML = out;
+        $("time").innerHTML = new Date - start;
+      }
+
+    }
+
+		function run_lua(code) {
+			str = intArrayFromString(code);
+			pt = allocate(str, "i8");
+			_run_lua(pt);
+		}
+
+		function parse_moon(moon_code) {
+      printer.clear();
+			run_lua("tree = moonscript.parse.string([==[" + moon_code + "]==])");
+			run_lua("print(moonscript.util.dump(tree))");
+      return printer.get_str();
+		}
+
+    function compile_moon(moon_code) {
+      printer.clear();
+			run_lua("tree = moonscript.parse.string([==[" + moon_code + "]==])");
+			run_lua("code = moonscript.compile.tree(tree)");
+      run_lua("print(code)")
+      return printer.get_str()
+    }
+
+    function execute_moon(moon_code) {
+      var lua = compile_moon(moon_code);
+      printer.clear();
+      run_lua(lua);
+      return printer.get_str();
+    }
+
+	</script>
+</head>
+<body>
+
+<textarea id="input" name="" rows="10" cols="30"></textarea>
+<button id="compile">Compile</button>
+<button id="run">Run</button>
+<div id="time"></div>
+<pre id="out"></pre>
+
+</body>
+</html>
