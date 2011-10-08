@@ -128,7 +128,9 @@
       var start = new Date;
       set_loading();
       execute_moon($("input").value, function(data) {
-        $("out").innerHTML = escape_html(data.code);
+        $("out").innerHTML = data.code == "" ?
+          '<span class="meta">&rarr; No output</span>' : escape_html(data.code);
+
         set_success("Finished in " + (new Date - start) + "ms");
       });
     };
