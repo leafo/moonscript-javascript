@@ -1,15 +1,60 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title></title>
-	<script type="text/javascript" src="client.js"></script>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="text/javascript" src="http://moonscript.org/highlight.js"></script>
+  <script type="text/javascript" src="client.js"></script>
+  <title>MoonScript Online Compiler</title>
 </head>
 <body>
-  <textarea id="input" name="" rows="10" cols="30"></textarea>
-  <button id="compile">Compile</button>
-  <button id="run">Run</button>
-  <div id="time"></div>
-  <pre id="out"></pre>
+  <div id="header">
+    <h1>MoonScript Online Compiler (0.2.0-dev)</h1>
+  </div>
+
+  <div id="body">
+    <div id="left" class="pane">
+        <textarea id="input" placeholder="-- MoonScript goes here"></textarea>
+    </div>
+
+    <div id="right">
+      <div id="inner">
+      <div id="status">
+      </div>
+          <pre id="out"></pre>
+      </div>
+    </div>
+
+    <div id="tools">
+      <div class="buttons">
+        <div style="float: left">
+          <select id="example-picker">
+            <option>Examples...</option>
+            <option></option>
+            <option>Basic Class</option>
+          </select>
+          <button id="clear">Clear</button>
+        </div>
+        <button disabled="disabled" id="compile">Compile to Lua</button>
+        <button disabled="disabled" id="run">Execute</button>
+      </div>
+	  <div id="info">
+		  The MoonScript online compiler runs in your browser through a version
+		  of <a href="http://www.lua.org">Lua</a> with <a
+			  href="http://www.inf.puc-rio.br/~roberto/lpeg/">LPeg</a> that has
+		  been compiled to JavaScript using <a
+			  href="http://emscripten.org">Emscripten</a>. It's very slow on Chrome, and reasonable on Firefox and Opera.  Find the source on <a href="#moonscript-js">github</a>.
+	  </div>
+
+	  <div id="info">
+		  Find out more about MoonScript at
+		  <a href="http://moonscript.org">moonscript.org</a>.
+	  </div>
+
+    </div>
+
+  </div>
+
 </body>
 </html>

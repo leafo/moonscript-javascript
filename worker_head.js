@@ -58,7 +58,7 @@ var start = new Date;
 
 if (typeof document == "undefined") { // running inside of worker
   setTimeout(function() {
-    var msg = "we are done loading after: " + (new Date - start);
+    var msg = "Loaded in " + (new Date - start) + "ms";
     printer.clear();
     postMessage({type:"ready", msg: msg});
 
