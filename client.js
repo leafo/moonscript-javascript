@@ -56,10 +56,15 @@
       alert("This page requires javascript workers");
       return;
     }
-    var worker = new Worker("worker.js");
+    var worker = new Worker("worker.js?1");
 
     worker.onmessage = function(event) {
       var data = event.data;
+      if (data.type == "error") {
+        set_error(data.msg);
+        return;
+      }
+
       var handlers = this.handlers[data.type];
       if (handlers && handlers.length > 0) {
         handlers.shift()(data);
@@ -108,6 +113,7 @@
     function set_error(msg) {
       status_node.innerHTML = msg;
       status_node.className = 'error';
+      $("out").innerHTML = "";
     }
 
     $("clear").onclick = function() {

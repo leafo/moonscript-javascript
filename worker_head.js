@@ -64,18 +64,22 @@ if (typeof document == "undefined") { // running inside of worker
 
     onmessage = function(event) {
       var type = event.data.type;
-      switch (type) {
-        case "parse":
-          postMessage({type:"parse", code: parse_moon(event.data.code)});
-          break;
-        case "compile":
-          postMessage({type:"compile", code: compile_moon(event.data.code)});
-          break;
-        case "execute":
-          postMessage({type:"execute", code: execute_moon(event.data.code)});
-          break;
-        default:
-          postMessage({type: "error", msg: "Unknown message: " + type})
+      try {
+        switch (type) {
+          case "parse":
+            postMessage({type:"parse", code: parse_moon(event.data.code)});
+            break;
+          case "compile":
+            postMessage({type:"compile", code: compile_moon(event.data.code)});
+            break;
+          case "execute":
+            postMessage({type:"execute", code: execute_moon(event.data.code)});
+            break;
+          default:
+            postMessage({type: "error", msg: "Unknown message: " + type});
+        }
+      } catch (e) {
+        postMessage({type: "error", msg: "There was a fatal error"});
       }
     }
 
