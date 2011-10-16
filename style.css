@@ -82,6 +82,12 @@ h1 {
 	text-align: right;
 }
 
+.toolbar {
+	float: right;
+	line-height: 40px;
+	padding-right: 10px;
+	color: #999;
+}
 
 #status {
 	line-height: 36px;
@@ -121,6 +127,26 @@ h1 {
 .error {
 	background-color: #E21507;
 }
+
+.status_error b {
+	color: #F84949;
+}
+
+.status_error {
+	color: #EECACA;
+}
+
+#snippet_url {
+	display: none;
+	color: #222;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 4px;
+	width: 250px;
+	box-shadow: inset 0px 2px 2px #aaa;
+	outline: none;
+}
+
 
 .meta {
 	color: #ccc;
