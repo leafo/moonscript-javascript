@@ -14,7 +14,7 @@
   function encode(o) {
     var pairs = [];
     for (key in o) {
-      pairs.push(escape(key) + "=" + escape(o[key]));
+      pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(o[key]));
     }
     return pairs.join("&");
   }
@@ -122,7 +122,8 @@
 
     var status_node = $("status");
     function set_loading() {
-      status_node.innerHTML = '<img src="img/ajax-loader.gif" alt="X" /> Loading...';
+      status_node.innerHTML =
+        '<img src="img/ajax-loader.gif" alt="X" /> Loading Compiler...';
       status_node.className = 'working';
     }
 
