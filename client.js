@@ -121,9 +121,10 @@
 
 
     var status_node = $("status");
-    function set_loading() {
+    function set_loading(msg) {
+      msg = msg || "Loading Compiler..."
       status_node.innerHTML =
-        '<img src="img/ajax-loader.gif" alt="X" /> Loading Compiler...';
+        '<img src="img/ajax-loader.gif" alt="X" /> ' + msg;
       status_node.className = 'working';
     }
 
@@ -156,7 +157,7 @@
     $("compile").onclick = function() {
       var start = new Date,
           input = $("input").value;
-      set_loading();
+      set_loading("Compiling...");
       compile_moon(input, function(data) {
         set_output("compile", data.code);
         set_success("Finished in " + (new Date - start) + "ms")
@@ -167,7 +168,7 @@
     $("run").onclick = function() {
       var start = new Date,
           input = $("input").value;
-      set_loading();
+      set_loading("Compiling...");
       execute_moon(input, function(data) {
         set_output("run", data.code);
         set_success("Finished in " + (new Date - start) + "ms");
