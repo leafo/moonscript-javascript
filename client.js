@@ -73,6 +73,16 @@
     var examples = new ExamplePicker();
     var last_action;
 
+
+    // create editor
+    var editor = CodeMirror.fromTextArea(document.getElementById("input"), {
+      tabMode: "shift",
+      theme: "moon",
+      lineNumbers: true
+    });
+
+    // worker
+
     if (!window.Worker) {
       alert("This page requires javascript workers");
       return;
@@ -151,12 +161,13 @@
     }
 
     $("clear").onclick = function() {
-      $("input").value = "";
+      editor.setValue("");
+      editor.focus();
     }
 
     $("compile").onclick = function() {
       var start = new Date,
-          input = $("input").value;
+          input = editor.getValue();
       set_loading("Compiling...");
       compile_moon(input, function(data) {
         set_output("compile", data.code);
@@ -167,7 +178,7 @@
 
     $("run").onclick = function() {
       var start = new Date,
-          input = $("input").value;
+          input = editor.getValue();
       set_loading("Compiling...");
       execute_moon(input, function(data) {
         set_output("run", data.code);
@@ -181,7 +192,7 @@
     $("example-picker").onchange = function() {
       if (this.selectedIndex > 1) {
         examples.get(this.value, function(content) {
-          $("input").value = content;
+          editor.setValue(content);
         });
       }
     }
@@ -257,7 +268,8 @@
 
             status_node.innerHTML = "Loaded snippet #" + escape_html(hash);
 
-            $("input").value = snippet.input;
+            editor.setValue(snippet.input);
+            editor.focus();
             set_output(snippet.type, snippet.output);
             snippet.id = hash;
             last_action = snippet;
@@ -267,6 +279,7 @@
     }
 
     window.onhashchange();
+    editor.focus();
   };
 
 })();

@@ -8,47 +8,52 @@ body {
 }
 
 #header {
-	background: #2B2B2B;
+	background: #29344A;
+	border-bottom: 1px solid #8DB2FF;
+
+	background-image: linear-gradient(top, rgb(59,71,97) 24%, rgb(41,52,74) 85%);
+	background-image: -o-linear-gradient(top, rgb(59,71,97) 24%, rgb(41,52,74) 85%);
+	background-image: -moz-linear-gradient(top, rgb(59,71,97) 24%, rgb(41,52,74) 85%);
+	background-image: -webkit-linear-gradient(top, rgb(59,71,97) 24%, rgb(41,52,74) 85%);
+	background-image: -ms-linear-gradient(top, rgb(59,71,97) 24%, rgb(41,52,74) 85%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.24, rgb(59,71,97)),
+		color-stop(0.85, rgb(41,52,74))
+	);
+
+
+	box-shadow: 0px 1px 0px #222,
+		0px 4px 6px rgba(0,0,0, 0.4);
 }
 
 h1 {
 	font-size: 16px;
 	color: #dadada;
+	text-shadow: -1px -1px 0px #1C2433;
 	margin: 0px;
 	padding: 0px;
 	line-height: 40px;
 	padding-left: 10px;
 }
 
-#body {
-	padding: 1em;
-}
-
-.pane {
-	box-shadow: inset 0px 2px 2px #aaa;
-		/* 0px 0px 8px rgba(100,100,100, 0.5);*/
-	border: 1px solid #666;
-	background: white;
-	padding: 4px;
-}
-
-
-#left {
+#left, .CodeMirror {
 	position: absolute;
 	top: 50px;
 	left: 10px;
-	bottom: 200px;
-	width: 40%;
+	bottom: 180px;
+	width: 45%;
+	font-size: 18px;
+	/*
+	border: 1px solid #222;
+	*/
 }
 
-#left textarea {
-	width: 100%;
+.CodeMirror-scroll {
 	height: 100%;
-	background: none;
-	border: 0;
-	resize: none;
-	outline: none;
-	font-size: 14px;
 }
 
 #right {
@@ -56,11 +61,11 @@ h1 {
 	top: 50px;
 	right: 10px;
 	bottom: 10px;
-	width: 60%;
+	width: 55%;
 }
 
 #right #inner {
-	margin-left: 38px;
+	margin-left: 32px;
 	height: 100%;
 	background: black;
 	color: white;
@@ -72,9 +77,9 @@ h1 {
 	/* background: rgba(255,0,0, 0.4); */
 	position: absolute;
 	left: 10px;
-	height: 180px;
+	height: 160px;
 	bottom: 10px;
-	width: 40%;
+	width: 45%;
 	padding: 4px;
 }
 
@@ -86,7 +91,19 @@ h1 {
 	float: right;
 	line-height: 40px;
 	padding-right: 10px;
-	color: #999;
+	color: white;
+}
+
+
+#right-title {
+	line-height: 35px;
+	padding: 0px 10px;
+	float: right;
+	border-bottom: 1px dashed #444;
+
+	background: #111;
+	background: #2E2E2E;
+	color: #eee;
 }
 
 #status {
@@ -97,6 +114,7 @@ h1 {
 
 #out {
 	padding: 10px;
+	margin: 0px;
 }
 
 #info {

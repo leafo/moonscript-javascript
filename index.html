@@ -3,9 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>MoonScript Online Compiler</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="text/javascript" src="http://moonscript.org/highlight.js"></script>
+  <script type="text/javascript" src="/moon/highlight.js"></script>
   <script type="text/javascript" src="client.js?3"></script>
+
+  <script type="text/javascript" src="codemirror2/lib/codemirror.js"></script>
+  <script type="text/javascript" src="codemirror2/mode/moonscript/moonscript.js"></script>
+
+  <link rel="stylesheet" href="codemirror2/lib/codemirror.css" />
+  <link rel="stylesheet" href="codemirror2/theme/moon.css" />
+  <link rel="stylesheet" href="style.css" />
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -22,24 +28,22 @@
 </head>
 <body>
   <div id="header">
-	<div class="toolbar">
-		<span id="toolbar_status"></span>
-		<input type="text" id="snippet_url" value="http://moonscript.org/compiler/#hello" />
-		<button id="save_button">Save Snippet</button>
-	</div>
+    <div class="toolbar">
+      <span id="toolbar_status"></span>
+      <input type="text" id="snippet_url" value="http://moonscript.org/compiler/#hello" />
+      <button id="save_button">Save Snippet</button>
+    </div>
     <h1>MoonScript Online Compiler (0.2.0-dev)</h1>
   </div>
 
-  <div id="body">
-    <div id="left" class="pane">
-        <textarea spellcheck="false" id="input" placeholder="-- MoonScript goes here"></textarea>
-    </div>
+  <div>
+    <textarea spellcheck="false" id="input" placeholder="-- MoonScript goes here"></textarea>
 
     <div id="right">
       <div id="inner">
-      <div id="status">
-      </div>
-          <pre id="out"></pre>
+        <div id="right-title">Output &#8628;</div>
+        <div id="status"></div>
+        <pre id="out"></pre>
       </div>
     </div>
 
@@ -59,22 +63,23 @@
         <button disabled="disabled" id="compile">Compile to Lua</button>
         <button disabled="disabled" id="run">Execute</button>
       </div>
-	  <div id="info">
-		  The MoonScript online compiler runs in your browser through a version
-		  of <a href="http://www.lua.org">Lua</a> with <a
-			  href="http://www.inf.puc-rio.br/~roberto/lpeg/">LPeg</a> that has
-		  been compiled to JavaScript using <a
-			  href="http://emscripten.org">Emscripten</a>. It's very slow on
-		  Chrome, and reasonable on Firefox and Opera.  Find the source on <a
-			  href="https://github.com/leafo/moonscript-javascript">github</a>.
-	  </div>
 
-	  <div id="info">
-		  Find out more about MoonScript at
-		  <a href="http://moonscript.org">moonscript.org</a>.
-		  <br />
-		  Contact and updates on Twitter: <a href="http://twitter.com/moonscript">@moonscript</a>
-	  </div>
+      <div id="info">
+        The MoonScript online compiler runs in your browser through a version
+        of <a href="http://www.lua.org">Lua</a> with <a
+          href="http://www.inf.puc-rio.br/~roberto/lpeg/">LPeg</a> that has
+        been compiled to JavaScript using <a
+          href="http://emscripten.org">Emscripten</a>. It's very slow on
+        Chrome, and reasonable on Firefox and Opera.  Find the source on <a
+          href="https://github.com/leafo/moonscript-javascript">github</a>.
+      </div>
+
+      <div id="info">
+        Find out more about MoonScript at
+        <a href="http://moonscript.org">moonscript.org</a>.
+        <br />
+        Contact and updates on Twitter: <a href="http://twitter.com/moonscript">@moonscript</a>
+      </div>
 
     </div>
 
