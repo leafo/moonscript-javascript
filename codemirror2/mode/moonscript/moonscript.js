@@ -27,6 +27,10 @@ CodeMirror.defineMode('moonscript', function(conf) {
     "in", "from", "when", "using", "else", "and", "or", "not"
   ]);
 
+  var special = words([
+    "self", "nil", "true", "false"
+  ]);
+
   // from lua.js
   var builtins = words([
     "_G","_VERSION","assert","collectgarbage","dofile","error","getfenv","getmetatable","ipairs","load",
@@ -102,7 +106,7 @@ CodeMirror.defineMode('moonscript', function(conf) {
     } else if (ch.match(/[a-z]/i)) {
       stream.eatWhile(/[a-z_0-9]/i);
       var word = stream.current();
-      if (word == "self") return "atom";
+      if (word.match(special)) return "atom";
       if (word.match(keywords)) {
         return "keyword";
       } else if (word.match(proper)) {
