@@ -24,7 +24,8 @@ CodeMirror.defineMode('moonscript', function(conf) {
   var keywords = words([
     "class", "extends", "if", "then", "super", "do", "with",
     "import", "export", "while", "elseif", "return", "for",
-    "in", "from", "when", "using", "else", "and", "or", "not"
+    "in", "from", "when", "using", "else", "and", "or", "not",
+    "switch", "break"
   ]);
 
   var special = words([
@@ -77,7 +78,6 @@ CodeMirror.defineMode('moonscript', function(conf) {
   function lua_string(stream) {
     if (stream.skipTo("]")) {
       stream.eat("]");
-      console.log("checking end");
       var rem = this.lua_string_len;
       while (stream.eat("=") && rem > 0) {
         rem--;
