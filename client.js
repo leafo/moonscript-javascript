@@ -68,31 +68,19 @@
 
   }
 
-  window.onload = function() {
-    var highlighter = new Lua();
-    var examples = new ExamplePicker();
-    var last_action;
-
-
-    // create editor
-    var editor = CodeMirror.fromTextArea(document.getElementById("input"), {
-      tabMode: "shift",
-      theme: "moon",
-      lineNumbers: true
-    });
-
-    // worker
-
+  function WebWorkerCompiler(msgs) {
     if (!window.Worker) {
       alert("This page requires javascript workers");
       return;
     }
-    var worker = new Worker("worker.js?1");
+
+    var worker = this.worker = new Worker("worker.js?1");
+    set_loading("Loading Compiler...");
 
     worker.onmessage = function(event) {
       var data = event.data;
       if (data.type == "error") {
-        set_error(data.msg);
+        msgs.error(data.msg);
         return;
       }
 
@@ -114,39 +102,95 @@
     }
 
     worker.push_handler("ready", function(data) {
-      set_success(escape_html(data.msg));
-      $("compile").disabled = false;
-      $("run").disabled = false;
+      msgs.success(escape_html(data.msg));
     });
 
-    function compile_moon(code, result) {
+    this.compile = function(code, result) {
       worker.postMessage({type:"compile", code:code});
       worker.push_handler("compile", result);
     }
 
-    function execute_moon(code, result) {
+    this.execute = function(code, result) {
       worker.postMessage({type:"execute", code:code});
       worker.push_handler("execute", result);
     }
+  }
 
+  function AjaxCompiler(msgs) {
+    var api = "proxy.php";
+    var error_msg = "There was a fatal error";
+
+    // warm up the compiler
+    get("proxy.php?action=version", function(res) {
+      $("version").innerHTML = "(" + res.responseText + ")";
+    });
+
+    msgs.success("Ready");
+
+    this.compile = function(code, response) {
+      msgs.loading();
+      post(api+"?action=compile", {code: code}, function(res) {
+        var obj = JSON.parse(res.responseText);
+        if (obj.error) {
+          msgs.error(error_msg, obj.msg);
+        } else {
+          response(obj);
+        }
+      });
+    }
+
+    this.execute = function(code, response) {
+      msgs.loading();
+      post(api+"?action=run", {code: code}, function(res) {
+        msgs.success();
+        var obj = JSON.parse(res.responseText);
+        if (obj.error) {
+          msgs.error(error_msg, obj.msg);
+        } else {
+          response({code: obj.stdout});
+        }
+      });
+    }
+  }
+
+  window.onload = function() {
+    var highlighter = new Lua();
+    var examples = new ExamplePicker();
+    var last_action;
+
+    // create editor
+    var editor = CodeMirror.fromTextArea(document.getElementById("input"), {
+      tabMode: "shift",
+      theme: "moon",
+      lineNumbers: true
+    });
 
     var status_node = $("status");
     function set_loading(msg) {
-      msg = msg || "Loading Compiler..."
+      msg = msg || "Loading..."
       status_node.innerHTML =
         '<img src="img/ajax-loader.gif" alt="X" /> ' + msg;
       status_node.className = 'working';
+
+      $("compile").disabled = true;
+      $("run").disabled = true;
     }
 
     function set_success(msg) {
       status_node.innerHTML = msg;
       status_node.className = 'success';
+
+      $("compile").disabled = false;
+      $("run").disabled = false;
     }
 
-    function set_error(msg) {
+    function set_error(msg, body) {
       status_node.innerHTML = msg;
       status_node.className = 'error';
-      $("out").innerHTML = "";
+      $("out").innerHTML = body || "";
+
+      $("compile").disabled = false;
+      $("run").disabled = false;
     }
 
     function set_output(type, body) {
@@ -160,6 +204,15 @@
       }
     }
 
+    var msgs = {
+      success: set_success,
+      loading: set_loading,
+      error: set_error
+    }
+
+    // var compiler = new WebWorkerCompiler(msgs);
+    var compiler = new AjaxCompiler(msgs);
+
     $("clear").onclick = function() {
       editor.setValue("");
       editor.focus();
@@ -169,7 +222,7 @@
       var start = new Date,
           input = editor.getValue();
       set_loading("Compiling...");
-      compile_moon(input, function(data) {
+      compiler.compile(input, function(data) {
         set_output("compile", data.code);
         set_success("Finished in " + (new Date - start) + "ms")
         last_action = { type: "compile", input: input, output: data.code };
@@ -180,15 +233,13 @@
       var start = new Date,
           input = editor.getValue();
       set_loading("Compiling...");
-      execute_moon(input, function(data) {
+      compiler.execute(input, function(data) {
         set_output("run", data.code);
         set_success("Finished in " + (new Date - start) + "ms");
         last_action = { type: "run", input: input, output: data.code };
       });
     };
 
-    set_loading();
-    
     $("example-picker").onchange = function() {
       if (this.selectedIndex > 1) {
         examples.get(this.value, function(content) {
@@ -209,13 +260,8 @@
           status_node = $("toolbar_status"),
           output_node = $("snippet_url");
 
-      if (!last_action) {
-        alert("Compile or run some code first");
-        return;
-      }
-
-      if (last_action.id) {
-        alert("Modify the code and compile or run before saving");
+      if (!last_action || last_action.id) {
+        alert("You must compile or execute before saving");
         return;
       }
 
