@@ -1,3 +1,4 @@
 *.tar.gz
 lua-*/
 lpeg-*/
+node_modules/

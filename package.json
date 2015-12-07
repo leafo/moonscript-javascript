@@ -1,0 +1,28 @@
+{
+  "name": "moonscript-javascript",
+  "version": "1.0.0",
+  "description": "This is a version of [MoonScript](http://moonscript.org) that has been compiled to JavaScript using [Emscripten](http://emscripten.org).",
+  "main": "moonscript.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "classnames": "^2.2.1",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leafo/moonscript-javascript.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leafo/moonscript-javascript/issues"
+  },
+  "homepage": "https://github.com/leafo/moonscript-javascript#readme"
+}
