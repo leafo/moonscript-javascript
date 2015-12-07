@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>MoonScript Online Compiler</title>
-  <script type="text/javascript" src="/highlight.js"></script>
-  <script type="text/javascript" src="client.js?4"></script>
 
+  <script type="text/javascript" src="/highlight.js"></script>
   <script type="text/javascript" src="codemirror2/lib/codemirror.js"></script>
   <script type="text/javascript" src="codemirror2/mode/moonscript/moonscript.js?1"></script>
 
+  <script type="text/javascript" src="node_modules/react/dist/react.js"></script>
+  <script type="text/javascript" src="node_modules/react-dom/dist/react-dom.js"></script>
+
   <link rel="stylesheet" href="codemirror2/lib/codemirror.css" />
   <link rel="stylesheet" href="codemirror2/theme/moon.css" />
-  <link rel="stylesheet" href="style.css?3" />
+  <link rel="stylesheet" href="style.css" />
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -27,59 +29,12 @@
 
 </head>
 <body>
-  <div id="header">
-    <div class="toolbar">
-      <span id="toolbar_status"></span>
-      <input type="text" id="snippet_url" value="http://moonscript.org/compiler/#hello" />
-      <button id="save_button">Save Snippet</button>
-    </div>
-    <h1>MoonScript Online Compiler <span id="version"></span></h1>
-  </div>
+  <div id="body"></div>
 
-  <div>
-    <textarea spellcheck="false" id="input" placeholder="-- MoonScript goes here"></textarea>
-
-    <div id="right">
-      <div id="inner">
-        <div id="right-title">Output &#8628;</div>
-        <div id="status"></div>
-        <pre id="out"></pre>
-      </div>
-    </div>
-
-    <div id="tools">
-      <div class="buttons">
-        <div style="float: left">
-          <select id="example-picker">
-            <option>Examples...</option>
-            <option></option>
-            <option>Basic Class</option>
-            <option>List Comprehensions</option>
-            <option>Callbacks</option>
-            <option>Scope</option>
-          </select>
-          <button id="clear">Clear</button>
-        </div>
-        <button disabled="disabled" id="compile">Compile to Lua</button>
-        <button disabled="disabled" id="run">Execute</button>
-      </div>
-
-      <div id="info">
-        MoonScript is a programmer friendly language that compiles to <a href="http://www.lua.org">Lua</a>.
-        This page communicates with an online compiler running <a href="http://leafo.net/posts/lua_on_heroku.html">Lua directly on Heroku</a>.
-        View the source on <a href="https://github.com/leafo/moonscript-javascript">github</a>.
-      </div>
-
-      <div id="info">
-        Find out more about MoonScript at
-        <a href="http://moonscript.org">moonscript.org</a>.
-        <br />
-        Contact and updates on Twitter: <a href="http://twitter.com/moonscript">@moonscript</a>
-      </div>
-
-    </div>
-
-  </div>
-
+  <script type="text/javascript" src="moonscript.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript">
+    MoonScript.render();
+  </script>
 </body>
 </html>
