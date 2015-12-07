@@ -1,6 +1,6 @@
 CC=/usr/lib/emscripten/emcc
-FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2
-EXPORTED_FUNCTIONS=-s EXPORTED_FUNCTIONS="['_compile_moonscript']"
+FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2 
+EMSCRIPTEN_FLAGS=-s EXPORTED_FUNCTIONS="['_compile_moonscript']" -s ALLOW_MEMORY_GROWTH=1 
 
 FILES=moonscript.c \
 			lua-5.3.2/src/lapi.c \
@@ -43,7 +43,7 @@ FILES=moonscript.c \
 			lpeg-1.0.0/lpvm.c
 
 moonscript.js: $(FILES)
-	$(CC) $(FLAGS) $(EXPORTED_FUNCTIONS) $+ -o $@
+	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $+ -o $@
 
 test.js: test.c
 	$(CC) $(FLAGS) $+ -o $@
