@@ -1,11 +1,6 @@
-
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
 
 #include <lua.h>
 #include <lualib.h>
@@ -81,20 +76,3 @@ const char* compile_moonscript(const char* input) {
 		return lua_tostring(L, -2);
 	}
 }
-
-// int main(int argc, char **argv) {
-// 	lua_State *l = luaL_newstate();
-// 	luaL_openlibs(l);
-// 
-// 	luaopen_lpeg(l);
-// 	setloaded(l, "lpeg");
-// 
-// 	if (luaL_loadbuffer(l, (const char *)moonscript_lua, moonscript_lua_len, "moonscript.lua") != LUA_OK) {
-// 		fprintf(stderr, "Failed to load moonscript.lua\n");
-// 		return 1;
-// 	}
-// 	lua_call(l, 0, 0);
-// 
-// 	luaL_loadbuffer(l, code, strlen(code), "test.lua");
-// 	lua_call(l, 0, 0);
-// }
