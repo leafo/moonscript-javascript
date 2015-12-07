@@ -1,4 +1,3 @@
-min.js
-worker.js
-db.php
-db.prod.php
+*.tar.gz
+lua-*/
+lpeg-*/
