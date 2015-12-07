@@ -9,3 +9,5 @@ node_modules/
 /.gitignore
 /index.js
 /style.css
+/worker.js
+/worker_suffix.js

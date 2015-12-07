@@ -6,3 +6,5 @@
 
 : foreach *.scss |> !scss |> %B.css
 : foreach *.coffee |> !coffee |> %B.js
+: moonscript.js worker_suffix.js |> !join |> worker.js
+
