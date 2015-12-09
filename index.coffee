@@ -27,6 +27,8 @@ R "MoonScriptCompiler", {
 
       textarea {
         value: @state.code_input
+        className: "code_input"
+        placeholder: "Write MoonScript here..."
         onChange: (e) =>
           @setState {
             code_input: e.target.value
@@ -40,7 +42,7 @@ R "MoonScriptCompiler", {
             }
       }
 
-      pre className: "value", @state.last_output
+      pre className: "value code_output", @state.last_output
     ]
 }
 
