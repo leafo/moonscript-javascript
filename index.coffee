@@ -28,6 +28,24 @@ R "MoonScriptCompiler", {
 
       @try_compile()
 
+  do_execute: ->
+    @setState {
+      input_timeout: null
+      loading: true
+      executing: true
+    }
+
+    to_execute = @state.code_input
+    MoonScript.execute(to_execute).then (res) =>
+      return unless to_execute == @state.code_input
+
+      @setState {
+        last_output: res
+        loading: false
+        executing: false
+      }
+
+
   do_compile: ->
     @setState {
       input_timeout: null
@@ -45,6 +63,7 @@ R "MoonScriptCompiler", {
 
   try_compile: ->
     return if @state.initial_loading
+    return if @state.executing
 
     if @state.input_timeout
       clearTimeout @state.input_timeout
@@ -76,7 +95,12 @@ R "MoonScriptCompiler", {
             @setState code_input: e.target.value
             @try_compile()
         }
-        div className: "button_toolbar", "Hello world!"
+        div className: "button_toolbar", children: [
+          button {
+            className: "button"
+            onClick: @do_execute
+          }, "Execute"
+        ]
       ]
 
       pre className: "value code_output", @state.last_output

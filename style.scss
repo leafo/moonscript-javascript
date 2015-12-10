@@ -1,10 +1,15 @@
-
+$link_color: #f05a7f;
 
 body {
     font-family: rangeregular;
     padding: 0;
     margin: 0;
     background: #F0F0F0;
+}
+
+a {
+    color: $link_color;
+    text-decoration: none;
 }
 
 .header {
@@ -57,9 +62,11 @@ body {
 .code_column {
     position: fixed;
     top: 60px;
-    bottom: 10px;
+    bottom: 20px;
     width: calc(50% - 20px);
     left: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .code_input {
@@ -70,8 +77,8 @@ body {
     border-radius: 2px;
     padding: 10px;
     color: #444;
-    height: 100%;
     width: 100%;
+    flex: 1;
 
     &:focus {
         outline: none;
@@ -79,3 +86,35 @@ body {
         box-shadow: 0 0 0 1px darken(#dadada, 20%);
     }
 }
+
+.button_toolbar {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.button {
+    position: relative;
+    display: inline-block;
+    border: 0;
+    height: 36px;
+    line-height: 38px;
+    padding: 0 20px;
+    border-radius: 2px;
+    background: white;
+    box-shadow: 0 4px 0 #d9d9d8;
+    user-select: none;
+    font-family: rangeregular;
+    color: $link_color;
+    font-size: 14px;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:active {
+        background: darken(#f0f0f0, 5%);
+        box-shadow: 0 2px 0 darken(#d9d9d8, 5%);
+        top: 2px;
+    }
+}
+
