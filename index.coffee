@@ -69,7 +69,7 @@ R "MoonScriptCompiler", {
       clearTimeout @state.input_timeout
 
     @setState {
-      input_timeout: setTimeout @do_compile, 150
+      input_timeout: setTimeout @do_compile, 50
     }
 
   render: ->

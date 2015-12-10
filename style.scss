@@ -57,6 +57,35 @@ a {
     right: 10px;
     box-sizing: border-box;
     margin: 0;
+
+
+    .l_builtins {
+        color: #707A34;
+    }
+
+    .l_string {
+        color: #A16D43;
+    }
+
+    .l_number {
+        color: #893D8C;
+    }
+
+    .l_function {
+        color: #8E4681;
+    }
+
+    .l_symbol {
+        color: #B50C0C;
+    }
+
+    .l_proper {
+        color: #30A0BD;
+    }
+
+    .l_keyword {
+        color: #0CB56C;
+    }
 }
 
 .code_column {
