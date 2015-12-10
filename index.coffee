@@ -13,6 +13,8 @@ window.R = (name, data, p=R, prefix="") ->
 
 R "MoonScriptCompiler", {
   getInitialState: ->
+    @highlighter = new LuaHighlighter()
+
     {
       code_input: ""
       last_output: ""
@@ -20,6 +22,7 @@ R "MoonScriptCompiler", {
 
   componentDidMount: ->
     @setState initial_loading: true
+
     MoonScript.get_version().then (version) =>
       @setState {
         initial_loading: false
@@ -103,13 +106,27 @@ R "MoonScriptCompiler", {
         ]
       ]
 
-      pre {
-        className: "value code_output"
-        key: "code_output"
-        dangerouslySetInnerHTML: {
-          __html: new MoonHighlighter().format_text @state.last_output
+      div className: "output_column", children: [
+        div className: "output_status", children: [
+          if @state.initial_loading
+            "Warming up compiler..."
+          else if @state.executing
+            "Executing..."
+          else if @state.loading
+            "Compiling..."
+          else
+            "Ready"
+        ]
+
+        pre {
+          className: "value code_output"
+          key: "code_output"
+          dangerouslySetInnerHTML: {
+            __html: @highlighter.format_text @state.last_output
+          }
         }
-      }
+      ]
+
     ]
 }
 

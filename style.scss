@@ -5,6 +5,7 @@ body {
     padding: 0;
     margin: 0;
     background: #F0F0F0;
+    color: #222;
 }
 
 a {
@@ -17,7 +18,7 @@ a {
     background: rgba(black, 0.8);
     color: white;
     line-height: 50px;
-    padding: 0 40px;
+    padding: 0 20px;
     position: fixed;
     top: 0;
     left: 0;
@@ -48,16 +49,19 @@ a {
     }
 }
 
+.output_column {
+    margin: 60px 20px 20px 50%;
+    box-sizing: border-box;
+}
+
+.output_status {
+    background: #DCDCDC;
+    padding: 10px;
+}
+
 .code_output {
     font-size: 18px;
-    position: absolute;
-    top: 60px;
-    bottom: 10px;
-    width: calc(50% - 20px);
-    right: 10px;
-    box-sizing: border-box;
-    margin: 0;
-
+    color: #666;
 
     .l_builtins {
         color: #707A34;
@@ -85,6 +89,10 @@ a {
 
     .l_keyword {
         color: #0CB56C;
+    }
+
+    .l_atom {
+        color: #333;
     }
 }
 

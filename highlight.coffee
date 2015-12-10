@@ -44,7 +44,6 @@ class Highlighter
       "(" + wrap_word(pattern) + ")"
 
     @patt = matches.join("|")
-    # console.log @patt
 
     @r = new RegExp @patt, "g"
     @replace_all()
