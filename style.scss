@@ -9,10 +9,38 @@ body {
 
 .header {
     height: 50px;
-    background: #2B2B2B;
+    background: rgba(black, 0.8);
     color: white;
     line-height: 50px;
     padding: 0 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+
+    .header_right {
+        position: absolute;
+        top: 0;
+        right: 20px;
+        line-height: 50px;
+    }
+
+    .status_flag {
+        transition: 0.4s ease background;
+        padding: 8px 10px;
+        line-height: normal;
+        display: inline-block;
+        border-radius: 8px;
+
+        &.loading {
+            background: #f277a1;
+        }
+
+        &.ready {
+            background: #8EB17D;
+        }
+    }
 }
 
 .code_output {
@@ -26,6 +54,14 @@ body {
     margin: 0;
 }
 
+.code_column {
+    position: fixed;
+    top: 60px;
+    bottom: 10px;
+    width: calc(50% - 20px);
+    left: 10px;
+}
+
 .code_input {
     font-family: range_monomedium;
     box-sizing: border-box;
@@ -34,11 +70,8 @@ body {
     border-radius: 2px;
     padding: 10px;
     color: #444;
-    position: absolute;
-    top: 60px;
-    bottom: 10px;
-    width: calc(50% - 20px);
-    left: 10px;
+    height: 100%;
+    width: 100%;
 
     &:focus {
         outline: none;

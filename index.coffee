@@ -18,9 +18,17 @@ R "MoonScriptCompiler", {
       last_output: ""
     }
 
+  componentDidMount: ->
+    @setState initial_loading: true
+    MoonScript.get_version().then (version) =>
+      @setState {
+        initial_loading: false
+        version: version
+      }
+
+      @try_compile()
 
   do_compile: ->
-    console.log "doing compile"
     @setState {
       input_timeout: null
       loading: true
@@ -36,10 +44,10 @@ R "MoonScriptCompiler", {
       }
 
   try_compile: ->
+    return if @state.initial_loading
+
     if @state.input_timeout
       clearTimeout @state.input_timeout
-
-    console.log "attempting compile"
 
     @setState {
       input_timeout: setTimeout @do_compile, 150
@@ -47,16 +55,29 @@ R "MoonScriptCompiler", {
 
   render: ->
     div children: [
-      div className: "header", "MoonScript compiler"
+      div className: "header", children: [
+        "MoonScript compiler"
 
-      textarea {
-        value: @state.code_input
-        className: "code_input"
-        placeholder: "Write MoonScript here..."
-        onChange: (e) =>
-          @setState code_input: e.target.value
-          @try_compile()
-      }
+        div className: "header_right", children: [
+          if @state.initial_loading
+            span className: "status_flag loading", "Loading..."
+          else
+            span className: "status_flag ready", "#{@state.version}"
+        ]
+
+      ]
+
+      div className: "code_column", children: [
+        textarea {
+          value: @state.code_input
+          className: "code_input"
+          placeholder: "Write MoonScript here..."
+          onChange: (e) =>
+            @setState code_input: e.target.value
+            @try_compile()
+        }
+        div className: "button_toolbar", "Hello world!"
+      ]
 
       pre className: "value code_output", @state.last_output
     ]
@@ -100,6 +121,9 @@ MoonScript.execute = (code) ->
   return blank_promise if code == ""
   worker = MoonScript.get_worker()
   worker.send "execute", code
+
+MoonScript.get_version = ->
+  MoonScript.execute "print require('moonscript.version').version"
 
 MoonScript.render = ->
   body = document.querySelector("#body")
