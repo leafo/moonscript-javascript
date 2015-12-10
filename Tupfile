@@ -1,7 +1,7 @@
 .gitignore
 
 !coffee = |> ^ coffee %o^ cat %f | coffee -c -s > %o |>
-!scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
+!scss = |> ^ scss %o^ sassc -I scss/ < %f | postcss --use autoprefixer > %o |>
 !join = |> ^ join %o^ cat %f > %o |>
 
 : foreach *.scss |> !scss |> %B.css
