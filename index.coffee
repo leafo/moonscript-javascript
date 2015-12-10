@@ -43,7 +43,6 @@ R "MoonScriptCompiler", {
     ]
 }
 
-
 class MoonWorker
   id: 0
 
@@ -70,12 +69,18 @@ class MoonWorker
 MoonScript.get_worker = ->
   MoonScript.worker ||= new MoonWorker
 
+blank_promise = new Promise (r) -> r ""
+
 MoonScript.compile = (code) ->
-  if code == ""
-    return new Promise (r) -> r ""
+  return blank_promise if code == ""
 
   worker = MoonScript.get_worker()
   worker.send "compile", code
+
+MoonScript.execute = (code) ->
+  return blank_promise if code == ""
+  worker = MoonScript.get_worker()
+  worker.send "execute", code
 
 MoonScript.render = ->
   body = document.querySelector("#body")

@@ -8,12 +8,25 @@
 
 #include "moonscript/moonscript.h"
 
+#define CODE(...) #__VA_ARGS__
+
 int luaopen_lpeg (lua_State *L);
 
 lua_State* L;
 int default_stack_size;
 
-const char* moonscript_to_lua_src = "return require('moonscript.base').to_lua(...)";
+const char* moonscript_to_lua_src = CODE(
+	return require('moonscript.base').to_lua(...)
+);
+
+const char* execute_moonscript_src = CODE(
+	local fn, err = require('moonscript.base').loadstring(...)
+
+	if not fn then
+		return err
+	end
+	return fn()
+);
 
 // put whatever is on top of stack into package.loaded under name something is
 // already there
@@ -51,6 +64,21 @@ void setup_lua() {
 	default_stack_size = lua_gettop(L);
 }
 
+
+const char* run_moonscript(const char* input) {
+	setup_lua();
+	lua_pop(L, lua_gettop(L) - default_stack_size);
+
+	if (luaL_loadbuffer(L, execute_moonscript_src, strlen(execute_moonscript_src), "execute_moonscript") != LUA_OK) {
+		return "Failed to load code compiler";
+	}
+
+	lua_pushstring(L, input);
+	int res = lua_pcall(L, 1, 1, 0);
+
+	// both return value and error is returned
+	return lua_tostring(L, -1);
+}
 
 const char* compile_moonscript(const char* input) {
 	setup_lua();
