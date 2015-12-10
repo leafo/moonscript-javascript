@@ -18,6 +18,33 @@ R "MoonScriptCompiler", {
       last_output: ""
     }
 
+
+  do_compile: ->
+    console.log "doing compile"
+    @setState {
+      input_timeout: null
+      loading: true
+    }
+
+    to_compile = @state.code_input
+    MoonScript.compile(to_compile).then (res) =>
+      return unless to_compile == @state.code_input
+
+      @setState {
+        last_output: res
+        loading: false
+      }
+
+  try_compile: ->
+    if @state.input_timeout
+      clearTimeout @state.input_timeout
+
+    console.log "attempting compile"
+
+    @setState {
+      input_timeout: setTimeout @do_compile, 150
+    }
+
   render: ->
     div children: [
       div className: "header", "MoonScript compiler"
@@ -27,16 +54,8 @@ R "MoonScriptCompiler", {
         className: "code_input"
         placeholder: "Write MoonScript here..."
         onChange: (e) =>
-          @setState {
-            code_input: e.target.value
-            loading: true
-          }
-
-          MoonScript.compile(e.target.value).then (res) =>
-            @setState {
-              last_output: res
-              loading: false
-            }
+          @setState code_input: e.target.value
+          @try_compile()
       }
 
       pre className: "value code_output", @state.last_output
