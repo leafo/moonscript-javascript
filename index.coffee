@@ -103,7 +103,13 @@ R "MoonScriptCompiler", {
         ]
       ]
 
-      pre className: "value code_output", @state.last_output
+      pre {
+        className: "value code_output"
+        key: "code_output"
+        dangerouslySetInnerHTML: {
+          __html: new MoonHighlighter().format_text @state.last_output
+        }
+      }
     ]
 }
 

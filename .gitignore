@@ -7,6 +7,7 @@ node_modules/
 ##### Do not edit.
 .tup
 /.gitignore
+/highlight.js
 /index.js
 /style.css
 /worker.js
