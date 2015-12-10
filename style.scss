@@ -25,11 +25,38 @@ a {
     right: 0;
     z-index: 2;
 
+    .return_link {
+        color: #888;
+        margin-left: 15px;
+        font-size: 14px;
+
+        &:hover {
+            color: lighten(#888, 10%);
+        }
+    }
+
     .header_right {
         position: absolute;
         top: 0;
         right: 20px;
         line-height: 50px;
+
+        .github_link {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 8px;
+            margin-left: 20px;
+            width: 30px;
+            height: 30px;
+
+            img {
+                border: 0;
+                display: block;
+                width: 30px;
+                height: 30px;
+            }
+        }
+
     }
 
     .status_flag {
@@ -38,6 +65,7 @@ a {
         line-height: normal;
         display: inline-block;
         border-radius: 8px;
+        color: white;
 
         &.loading {
             background: #f277a1;

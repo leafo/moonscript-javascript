@@ -78,15 +78,19 @@ R "MoonScriptCompiler", {
   render: ->
     div children: [
       div className: "header", children: [
-        "MoonScript compiler"
+        "MoonScript online compiler"
+        " "
+        a className: "return_link", href: "http://moonscript.org", "← Return to MoonScript.org"
 
         div className: "header_right", children: [
           if @state.initial_loading
             span className: "status_flag loading", "Loading..."
           else
-            span className: "status_flag ready", "#{@state.version}"
-        ]
+            a href: "https://github.com/leafo/moonscript/blob/master/CHANGELOG.md", className: "status_flag ready", "#{@state.version}"
 
+          a className: "github_link", href: "https://github.com/leafo/moonscript-javascript",
+            img width: "30", height: "30", src: "img/github-icon.svg"
+        ]
       ]
 
       div className: "code_column", children: [

@@ -15,4 +15,3 @@ and running MoonScript.
 
 Check it out at <http://moonscript.org/compiler>.
 
-
