@@ -6,7 +6,7 @@ JavaScript using [Emscripten](http://emscripten.org).
 ## About
 
 The Lua source code of MoonScript is concatenated into a single file which is
-converted to a header using `xxd`. This is included a C file along with Lua and
+converted to a header using `xxd`. This is included in a C file along with Lua and
 LPeg which are then compiled into LLVM bitcode. Finally the entire thing is
 linked and fed into Emscripten to create a JavaScript file.
 
