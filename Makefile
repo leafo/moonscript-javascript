@@ -2,7 +2,7 @@
 
 CC=/usr/lib/emscripten/emcc
 FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2 
-EMSCRIPTEN_FLAGS=-s EXPORTED_FUNCTIONS="['_compile_moonscript', '_run_moonscript']" -s ALLOW_MEMORY_GROWTH=1
+EMSCRIPTEN_FLAGS=-s EXPORTED_FUNCTIONS="['_compile_moonscript', '_run_moonscript']" -s ALLOW_MEMORY_GROWTH=1 # -s MODULARIZE=1 --closure 1
 
 FILES=moonscript.c \
 			lua-5.3.2/src/lapi.c \
@@ -47,16 +47,6 @@ FILES=moonscript.c \
 moonscript.js: $(FILES)
 	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $+ -o $@
 	echo ";" >> $@
-
-test.js: test.c
-	$(CC) $(FLAGS) $+ -o $@
-
-worker.js: worker_head.js min.js
-	cat worker_head.js > $@
-	cat min.js >> $@
-
-min.js: moonscript.js
-	closure < $< > $@
 
 deploy_targets:
 	@find -L . -type f | grep -P -v '^\./(node_modules|fonts|lua\-|lpeg\-|codemirror2|moonscript\/)' | grep -P '\.(js|mem|css|html|svg)$$'
