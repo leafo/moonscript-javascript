@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <title>MoonScript Online Compiler</title>
 
-  <script type="text/javascript" src="highlight.js"></script>
-  <script type="text/javascript" src="lib/react.min.js"></script>
-  <script type="text/javascript" src="lib/react-dom.min.js"></script>
-
   <meta name="description" content="MoonScript is a programmer friendly
   language that compiles to Lua. The online compiler lets you compile and
   execute code interactively in your browser without having to install
@@ -22,6 +18,10 @@
     _gaq.push(['_trackPageview']);
 
     (function() {
+      if (window.location.hostname.includes('localhost')) {
+        return;
+      }
+
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
@@ -31,7 +31,6 @@
 </head>
 <body>
   <div id="body"></div>
-
   <script type="text/javascript" src="index.js"></script>
   <script type="text/javascript">
     MoonScript.render();

@@ -1,4 +1,4 @@
-.PHONY: deploy_targets deploy
+.PHONY: deploy_targets deploy clean
 
 CC=/usr/lib/emscripten/emcc
 FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2
@@ -6,7 +6,8 @@ EMSCRIPTEN_FLAGS=\
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
 	-s EXPORTED_FUNCTIONS="['_compile_moonscript','_run_moonscript']" \
-	-s EXPORTED_RUNTIME_METHODS="['ccall']" # -s MODULARIZE=1 --closure 1
+	-s EXPORTED_RUNTIME_METHODS="['ccall']" \
+	-s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORT_NAME=moonscript -s ENVIRONMENT='worker'
 
 FILES=moonscript.c \
 			lua-5.3.2/src/lapi.c \
@@ -48,9 +49,14 @@ FILES=moonscript.c \
 			lpeg-1.0.0/lptree.c \
 			lpeg-1.0.0/lpvm.c
 
+index.js: index.jsx highlight.js worker.js
+	npx esbuild --bundle index.jsx --minify --sourcemap --outfile=$@
+
+worker.js: worker/index.js moonscript.js
+	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap --outfile=$@
+
 moonscript.js: $(FILES)
 	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $+ -o $@
-	echo ";" >> $@
 
 deploy_targets:
 	@find -L . -type f | grep -P -v '^\./(node_modules|fonts|lua\-|lpeg\-|codemirror2|moonscript\/)' | grep -P '\.(js|wasm|css|html|svg)$$'
@@ -58,4 +64,7 @@ deploy_targets:
 
 deploy:
 	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/moonscript.org/compiler
+
+clean:
+	rm -f moonscript.js moonscript.wasm index.js index.js.map worker.js worker.js.map
 

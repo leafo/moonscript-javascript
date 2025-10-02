@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "classnames": "^2.2.1",
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "esbuild": "^0.25.10",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

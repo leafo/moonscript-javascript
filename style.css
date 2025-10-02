@@ -1,0 +1,183 @@
+:root {
+  --link-color: #f05a7f;
+}
+
+body {
+  font-family: rangeregular;
+  padding: 0;
+  margin: 0;
+  background: #f0f0f0;
+  color: #222;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.header {
+  height: 50px;
+  background: rgba(0 0 0 / 0.8);
+  color: #fff;
+  line-height: 50px;
+  padding: 0 20px;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 2;
+
+  & .return_link {
+    color: #888;
+    margin-left: 15px;
+    font-size: 14px;
+
+    &:hover {
+      color: color-mix(in oklab, #888 90%, white 10%);
+    }
+  }
+
+  & .header_right {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    line-height: 50px;
+
+    & .github_link {
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 8px;
+      margin-left: 20px;
+      width: 30px;
+      height: 30px;
+
+      & img {
+        border: 0;
+        display: block;
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+
+  & .status_flag {
+    transition: background 0.4s ease;
+    padding: 8px 10px;
+    line-height: normal;
+    display: inline-block;
+    border-radius: 8px;
+    color: #fff;
+
+    &.loading {
+      background: #f277a1;
+    }
+
+    &.ready {
+      background: #8eb17d;
+    }
+  }
+}
+
+.output_column {
+  margin: 60px 20px 20px 50%;
+  box-sizing: border-box;
+}
+
+.output_status {
+  background: #dcdcdc;
+  padding: 10px;
+}
+
+.code_output {
+  font-size: 18px;
+  color: #666;
+
+  & .l_builtins {
+    color: #707a34;
+  }
+
+  & .l_string {
+    color: #a16d43;
+  }
+
+  & .l_number {
+    color: #893d8c;
+  }
+
+  & .l_function {
+    color: #8e4681;
+  }
+
+  & .l_symbol {
+    color: #b50c0c;
+  }
+
+  & .l_proper {
+    color: #30a0bd;
+  }
+
+  & .l_keyword {
+    color: #0cb56c;
+  }
+
+  & .l_atom {
+    color: #333;
+  }
+}
+
+.code_column {
+  position: fixed;
+  top: 60px;
+  bottom: 20px;
+  width: calc(50% - 20px);
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.code_input {
+  font-family: range_monomedium;
+  box-sizing: border-box;
+  font-size: 18px;
+  border: 1px solid #dadada;
+  border-radius: 2px;
+  padding: 10px;
+  color: #444;
+  width: 100%;
+  flex: 1;
+
+  &:focus {
+    outline: none;
+    border: 1px solid color-mix(in oklab, #dadada 80%, black 20%);
+    box-shadow: 0 0 0 1px color-mix(in oklab, #dadada 80%, black 20%);
+  }
+}
+
+.button_toolbar {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+  border: 0;
+  height: 36px;
+  line-height: 38px;
+  padding: 0 20px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 4px 0 #d9d9d8;
+  user-select: none;
+  font-family: rangeregular;
+  color: var(--link-color);
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    background: color-mix(in oklab, #f0f0f0 95%, black 5%);
+    box-shadow: 0 2px 0 color-mix(in oklab, #d9d9d8 95%, black 5%);
+    top: 2px;
+  }
+}
