@@ -1,13 +1,17 @@
 .PHONY: deploy_targets deploy clean
 
 CC=/usr/lib/emscripten/emcc
-FLAGS=-Ilua-5.3.6/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2
+FLAGS=-Ilua-5.3.6/src/ -std=gnu99 -DLUA_COMPAT_5_2 -Oz
 EMSCRIPTEN_FLAGS=\
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
 	-s EXPORTED_FUNCTIONS="['_compile_moonscript','_run_moonscript']" \
 	-s EXPORTED_RUNTIME_METHODS="['ccall']" \
-	-s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORT_NAME=moonscript -s ENVIRONMENT='worker'
+	-s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORT_NAME=moonscript -s ENVIRONMENT='worker' \
+	-s FILESYSTEM=0 \
+	-s DISABLE_EXCEPTION_CATCHING=1 \
+	-s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
+	--closure 1
 
 FILES=moonscript.c \
 			lua-5.3.6/src/lapi.c \
@@ -51,7 +55,7 @@ FILES=moonscript.c \
 			lpeg-1.1.0/lpvm.c
 
 index.js: index.jsx highlight.js worker.js
-	npx esbuild --bundle index.jsx --minify --sourcemap --outfile=$@
+	npx esbuild --bundle index.jsx --format=esm --minify --sourcemap --outfile=$@
 
 worker.js: worker/index.js moonscript.js
 	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap --outfile=$@
