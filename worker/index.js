@@ -2,6 +2,16 @@ import moonscript from './../moonscript.js';
 
 const moduleConfig = {
   locateFile: (path) => path,
+  print: (text) => {
+    if (moduleConfig.printHandler) {
+      moduleConfig.printHandler(text);
+    } else {
+      console.log(text);
+    }
+  },
+  printErr: (text) => {
+    console.error(text);
+  },
 };
 
 let resolveModuleReady;
@@ -56,28 +66,28 @@ const withModule = async (handler) => {
 };
 
 const compile = (Module, code) => {
-  const originalPrint = Module.print;
+  const originalHandler = moduleConfig.printHandler;
   try {
-    Module.print = console.log;
+    moduleConfig.printHandler = console.log;
     return Module.ccall('compile_moonscript', 'string', ['string'], [code]);
   } finally {
-    Module.print = originalPrint;
+    moduleConfig.printHandler = originalHandler;
   }
 };
 
 const execute = (Module, code) => {
-  const originalPrint = Module.print;
+  const originalHandler = moduleConfig.printHandler;
   const buffer = [];
   try {
-    Module.print = (line) => {
+    moduleConfig.printHandler = (line) => {
       buffer.push(line);
     };
 
     const result = Module.ccall('run_moonscript', 'string', ['string'], [code]);
-    buffer.push(result);
+    if (result) buffer.push(result);
     return buffer.join('\n');
   } finally {
-    Module.print = originalPrint;
+    moduleConfig.printHandler = originalHandler;
   }
 };
 
