@@ -72,8 +72,8 @@ lpeg-1.1.0:
 	tar xzf lpeg-1.1.0.tar.gz
 
 deploy_targets:
-	@find -L . -type f | grep -P -v '^\./(node_modules|fonts|lua\-|lpeg\-|codemirror2|moonscript\/)' | grep -P '\.(js|wasm|css|html|svg)$$'
-	@find -L ./fonts -type f
+	@echo index.html style.css index.js worker.js moonscript.wasm img/github-icon.svg .htaccess
+	@find -L ./fonts -type f -name '*.woff' -o -name '*.woff2' -o -name 'stylesheet.css' | sed 's|^\./||'
 
 deploy:
 	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/moonscript.org/compiler
