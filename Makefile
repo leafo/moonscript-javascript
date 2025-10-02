@@ -54,8 +54,8 @@ FILES=moonscript.c \
 			lpeg-1.1.0/lptree.c \
 			lpeg-1.1.0/lpvm.c
 
-index.js: index.jsx highlight.js worker.js
-	npx esbuild --bundle index.jsx --format=esm --minify --sourcemap --outfile=$@
+app.js: app/index.jsx app/highlight.js worker.js
+	npx esbuild --bundle app/index.jsx --format=esm --minify --sourcemap --outfile=$@
 
 worker.js: worker/index.js moonscript.js
 	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap --outfile=$@
@@ -72,12 +72,12 @@ lpeg-1.1.0:
 	tar xzf lpeg-1.1.0.tar.gz
 
 deploy_targets:
-	@echo index.html style.css index.js worker.js moonscript.wasm img/github-icon.svg .htaccess
+	@echo index.html style.css app.js worker.js moonscript.wasm img/github-icon.svg .htaccess
 	@find -L ./fonts -type f -name '*.woff' -o -name '*.woff2' -o -name 'stylesheet.css' | sed 's|^\./||'
 
 deploy:
 	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/moonscript.org/compiler
 
 clean:
-	rm -f moonscript.js moonscript.wasm index.js index.js.map worker.js worker.js.map
+	rm -f moonscript.js moonscript.wasm app.js app.js.map worker.js worker.js.map
 
