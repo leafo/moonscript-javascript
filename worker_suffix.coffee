@@ -1,17 +1,23 @@
 
-p = new Promise (resolve) ->
-  Module.onRuntimeInitialized = resolve
+ready = if Module?.ready?
+  Module.ready
+else
+  new Promise (resolve, reject) ->
+    Module.onRuntimeInitialized = resolve
+    Module.onAbort = (reason) -> reject new Error reason
 
 @onmessage = (e) ->
   [id, action, code] = e.data
   switch action
     when "compile"
-      p.then ->
+      ready.then =>
         Module.print = console.log
         res = Module.ccall "compile_moonscript", "string", ["string"], [code]
         @postMessage [id, res]
+      .catch (err) =>
+        @postMessage [id, {error: err?.message ? String(err)}]
     when "execute"
-      p.then ->
+      ready.then =>
         buffer = []
 
         Module.print = (line) ->
@@ -21,4 +27,5 @@ p = new Promise (resolve) ->
 
         buffer.push res
         @postMessage [id, buffer.join "\n"]
-
+      .catch (err) =>
+        @postMessage [id, {error: err?.message ? String(err)}]

@@ -1,8 +1,12 @@
 .PHONY: deploy_targets deploy
 
 CC=/usr/lib/emscripten/emcc
-FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2 
-EMSCRIPTEN_FLAGS=-s EXPORTED_FUNCTIONS="['_compile_moonscript', '_run_moonscript']" -s ALLOW_MEMORY_GROWTH=1 # -s MODULARIZE=1 --closure 1
+FLAGS=-Ilua-5.3.2/src/ -std=gnu99 -DLUA_COMPAT_5_2 -O2
+EMSCRIPTEN_FLAGS=\
+	-s WASM=1 \
+	-s ALLOW_MEMORY_GROWTH=1 \
+	-s EXPORTED_FUNCTIONS="['_compile_moonscript','_run_moonscript']" \
+	-s EXPORTED_RUNTIME_METHODS="['ccall']" # -s MODULARIZE=1 --closure 1
 
 FILES=moonscript.c \
 			lua-5.3.2/src/lapi.c \
@@ -49,10 +53,9 @@ moonscript.js: $(FILES)
 	echo ";" >> $@
 
 deploy_targets:
-	@find -L . -type f | grep -P -v '^\./(node_modules|fonts|lua\-|lpeg\-|codemirror2|moonscript\/)' | grep -P '\.(js|mem|css|html|svg)$$'
+	@find -L . -type f | grep -P -v '^\./(node_modules|fonts|lua\-|lpeg\-|codemirror2|moonscript\/)' | grep -P '\.(js|wasm|css|html|svg)$$'
 	@find -L ./fonts -type f
 
 deploy:
 	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/moonscript.org/compiler
-
 
