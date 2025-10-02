@@ -1,42 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { LuaHighlighter } from './highlight.js';
-
-class MoonWorker {
-  constructor() {
-    this.id = 0;
-    this.worker = new Worker('worker.js', { type: 'module' });
-    this.listeners = {};
-
-    this.worker.onmessage = (event) => {
-      const [responseId, result] = event.data;
-      if (this.listeners[responseId]) {
-        const callback = this.listeners[responseId];
-        delete this.listeners[responseId];
-        callback(result);
-      }
-    };
-  }
-
-  send(...args) {
-    const sendId = this.id;
-    this.id += 1;
-
-    this.worker.postMessage([sendId, ...args]);
-
-    return new Promise((resolve) => {
-      this.listen(sendId, resolve);
-    });
-  }
-
-  listen(id, callback) {
-    this.listeners[id] = callback;
-  }
-}
-
-const blankPromise = Promise.resolve('');
-
-const MoonScript = {};
+import { MoonScript } from './moonscript.js';
 
 class MoonScriptCompiler extends React.Component {
   constructor(props) {
@@ -218,45 +183,16 @@ class MoonScriptCompiler extends React.Component {
   }
 }
 
-MoonScript.getWorker = function getWorker() {
-  if (!MoonScript.worker) {
-    MoonScript.worker = new MoonWorker();
-  }
-  return MoonScript.worker;
-};
-
-MoonScript.compile = function compile(code) {
-  if (!code) {
-    return blankPromise;
-  }
-
-  const worker = MoonScript.getWorker();
-  return worker.send('compile', code);
-};
-
-MoonScript.execute = function execute(code) {
-  if (!code) {
-    return blankPromise;
-  }
-
-  const worker = MoonScript.getWorker();
-  return worker.send('execute', code);
-};
-
-MoonScript.getVersion = function getVersion() {
-  return MoonScript.execute("return require('moonscript.version').version");
-};
-
-MoonScript.render = function render() {
+function render(selector) {
   if (typeof document === 'undefined') {
     return;
   }
-  const body = document.querySelector('#body');
-  if (!body) {
+  const element = document.querySelector(selector);
+  if (!element) {
     return;
   }
-  const root = ReactDOM.createRoot(body);
+  const root = ReactDOM.createRoot(element);
   root.render(<MoonScriptCompiler />);
-};
+}
 
-export { MoonScript, MoonWorker, MoonScriptCompiler };
+export { MoonScriptCompiler, render };
