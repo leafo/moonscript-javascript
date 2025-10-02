@@ -36,8 +36,7 @@ class MoonWorker {
 
 const blankPromise = Promise.resolve('');
 
-const MoonScript =
-  (typeof window !== 'undefined' && window.MoonScript) || {};
+const MoonScript = {};
 
 class MoonScriptCompiler extends React.Component {
   constructor(props) {
@@ -56,6 +55,7 @@ class MoonScriptCompiler extends React.Component {
     this.inputTimeout = null;
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.doExecute = this.doExecute.bind(this);
     this.doCompile = this.doCompile.bind(this);
     this.tryCompile = this.tryCompile.bind(this);
@@ -82,6 +82,13 @@ class MoonScriptCompiler extends React.Component {
   handleInputChange(event) {
     const { value } = event.target;
     this.setState({ codeInput: value }, this.tryCompile);
+  }
+
+  handleKeyDown(event) {
+    if (event.ctrlKey && event.key === 'Enter') {
+      event.preventDefault();
+      this.doExecute();
+    }
   }
 
   clearInputTimeout() {
@@ -187,6 +194,7 @@ class MoonScriptCompiler extends React.Component {
             className="code_input"
             placeholder="Write MoonScript here..."
             onChange={this.handleInputChange}
+            onKeyDown={this.handleKeyDown}
           />
           <div className="button_toolbar">
             <button className="button" onClick={this.doExecute} type="button">
@@ -250,9 +258,5 @@ MoonScript.render = function render() {
   const root = ReactDOM.createRoot(body);
   root.render(<MoonScriptCompiler />);
 };
-
-if (typeof window !== 'undefined') {
-  window.MoonScript = MoonScript;
-}
 
 export { MoonScript, MoonWorker, MoonScriptCompiler };

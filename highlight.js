@@ -167,8 +167,3 @@ class MoonHighlighter extends Highlighter {
 }
 
 export { Highlighter, LuaHighlighter, MoonHighlighter };
-
-if (typeof window !== 'undefined') {
-  window.LuaHighlighter = LuaHighlighter;
-  window.MoonHighlighter = MoonHighlighter;
-}
