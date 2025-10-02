@@ -236,7 +236,7 @@ MoonScript.execute = function execute(code) {
 };
 
 MoonScript.getVersion = function getVersion() {
-  return MoonScript.execute("print require('moonscript.version').version");
+  return MoonScript.execute("return require('moonscript.version').version");
 };
 
 MoonScript.render = function render() {
@@ -250,9 +250,6 @@ MoonScript.render = function render() {
   const root = ReactDOM.createRoot(body);
   root.render(<MoonScriptCompiler />);
 };
-
-MoonScript.get_version = MoonScript.getVersion;
-MoonScript.get_worker = MoonScript.getWorker;
 
 if (typeof window !== 'undefined') {
   window.MoonScript = MoonScript;
