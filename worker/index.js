@@ -1,4 +1,4 @@
-import moonscript from './../moonscript.js';
+import moonscript from './moonscript.js';
 
 const moduleConfig = {
   locateFile: (path) => path,

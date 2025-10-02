@@ -1,7 +1,7 @@
 class MoonWorker {
   constructor() {
     this.id = 0;
-    this.worker = new Worker('worker.js', { type: 'module' });
+    this.worker = new Worker('moonscript-worker.js', { type: 'module' });
     this.listeners = {};
 
     this.worker.onmessage = (event) => {
