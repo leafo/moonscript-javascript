@@ -1,5 +1,5 @@
 AddType application/wasm .wasm
 
-<FilesMatch "worker\.js$">
+<FilesMatch "(moonscript-worker|moonscript)\.js$">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
