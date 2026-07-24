@@ -13,6 +13,7 @@
     "react-dom": "^19.2.0"
   },
   "scripts": {
+    "start": "node dev.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/leafo/moonscript-javascript/issues"
   },
-  "homepage": "https://github.com/leafo/moonscript-javascript#readme"
+  "homepage": "https://github.com/leafo/moonscript-javascript#readme",
+  "allowScripts": {
+    "esbuild@0.25.10": true
+  }
 }
