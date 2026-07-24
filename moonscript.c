@@ -6,7 +6,7 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-#include "moonscript/moonscript.h"
+#include "build/moonscript.h"
 
 #define CODE(...) #__VA_ARGS__
 

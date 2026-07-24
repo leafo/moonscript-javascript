@@ -57,14 +57,24 @@ FILES=moonscript.c \
 app.js: app/index.jsx $(wildcard app/*.js) moonscript-worker.js
 	npx esbuild --bundle app/index.jsx --format=esm --minify --sourcemap --outfile=$@
 
-moonscript-worker.js: $(wildcard worker/*.js)
+moonscript-worker.js: worker/moonscript.js $(wildcard worker/*.js)
 	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap --outfile=$@
 
 moonscript.js: moonscript-worker.js app/moonscript.js
 	npx esbuild --bundle app/moonscript.js --format=esm --minify --sourcemap --outfile=$@
 
-worker/moonscript.js: lua-5.3.6 lpeg-1.1.0 $(FILES)
+worker/moonscript.js: lua-5.3.6 lpeg-1.1.0 build/moonscript.h $(FILES)
 	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $(FILES) -o $@
+
+MOONSCRIPT_LUA=$(shell find moonscript/moonscript moonscript/moon -name '*.lua' 2>/dev/null)
+
+# same recipe the moonscript repo uses to generate bin/binaries/moonscript.h
+build/moonscript.h: $(MOONSCRIPT_LUA)
+	@test -n "$(MOONSCRIPT_LUA)" || { echo "moonscript submodule is empty, run: git submodule update --init"; exit 1; }
+	mkdir -p build
+	cd moonscript && bin/splat.moon -l moonscript moonscript moon > ../build/moonscript.lua
+	cd build && xxd -i moonscript.lua > moonscript.h
+	rm build/moonscript.lua
 
 lua-5.3.6:
 	curl -O https://www.lua.org/ftp/lua-5.3.6.tar.gz
@@ -83,4 +93,5 @@ deploy: app.js moonscript.js moonscript-worker.js
 
 clean:
 	rm -f worker/moonscript.js worker/moonscript.wasm app.js app.js.map moonscript-worker.js moonscript-worker.js.map
+	rm -rf build
 

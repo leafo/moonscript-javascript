@@ -1,3 +1,4 @@
 [submodule "moonscript"]
 	path = moonscript
 	url = git@github.com:leafo/moonscript.git
+	branch = master
