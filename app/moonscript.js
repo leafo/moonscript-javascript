@@ -50,6 +50,15 @@ MoonScript.compile = function compile(code) {
   return worker.send('compile', code);
 };
 
+MoonScript.lint = function lint(code) {
+  if (!code) {
+    return blankPromise;
+  }
+
+  const worker = MoonScript.getWorker();
+  return worker.send('lint', code);
+};
+
 MoonScript.execute = function execute(code) {
   if (!code) {
     return blankPromise;

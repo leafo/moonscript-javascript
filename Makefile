@@ -5,7 +5,7 @@ FLAGS=-Ilua-5.3.6/src/ -std=gnu99 -DLUA_COMPAT_5_2 -Oz
 EMSCRIPTEN_FLAGS=\
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
-	-s EXPORTED_FUNCTIONS="['_compile_moonscript','_run_moonscript']" \
+	-s EXPORTED_FUNCTIONS="['_compile_moonscript','_run_moonscript','_lint_moonscript']" \
 	-s EXPORTED_RUNTIME_METHODS="['ccall']" \
 	-s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORT_NAME=moonscript -s ENVIRONMENT='worker' \
 	-s FILESYSTEM=0 \

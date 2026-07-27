@@ -28,6 +28,18 @@ const char* execute_moonscript_src = CODE(
 	return fn()
 );
 
+// false for the name argument suppresses the filename header in the output
+const char* lint_moonscript_src = CODE(
+	local lint = require('moonscript.cmd.lint')
+	local res, err = lint.lint_code(..., false)
+
+	if err then
+		return err
+	end
+
+	return res or ""
+);
+
 // put whatever is on top of stack into package.loaded under name something is
 // already there
 void setloaded(lua_State* l, char* name) {
@@ -71,6 +83,22 @@ const char* run_moonscript(const char* input) {
 
 	if (luaL_loadbuffer(L, execute_moonscript_src, strlen(execute_moonscript_src), "execute_moonscript") != LUA_OK) {
 		return "Failed to load code compiler";
+	}
+
+	lua_pushstring(L, input);
+	int res = lua_pcall(L, 1, 1, 0);
+
+	// both return value and error is returned
+	return lua_tostring(L, -1);
+}
+
+// returns formatted lint issues, empty string when clean, or the parse error
+const char* lint_moonscript(const char* input) {
+	setup_lua();
+	lua_pop(L, lua_gettop(L) - default_stack_size);
+
+	if (luaL_loadbuffer(L, lint_moonscript_src, strlen(lint_moonscript_src), "lint_moonscript") != LUA_OK) {
+		return "Failed to load code linter";
 	}
 
 	lua_pushstring(L, input);

@@ -156,6 +156,30 @@ a {
   text-align: right;
 }
 
+.text_button {
+  display: inline-block;
+  border: 0;
+  background: transparent;
+  height: 36px;
+  line-height: 38px;
+  padding: 0 12px;
+  margin-right: 8px;
+  user-select: none;
+  font-family: rangeregular;
+  font-size: 14px;
+  color: #888;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--link-color);
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .button {
   position: relative;
   display: inline-block;

@@ -75,6 +75,16 @@ const compile = (Module, code) => {
   }
 };
 
+const lint = (Module, code) => {
+  const originalHandler = moduleConfig.printHandler;
+  try {
+    moduleConfig.printHandler = console.log;
+    return Module.ccall('lint_moonscript', 'string', ['string'], [code]);
+  } finally {
+    moduleConfig.printHandler = originalHandler;
+  }
+};
+
 const execute = (Module, code) => {
   const originalHandler = moduleConfig.printHandler;
   const buffer = [];
@@ -100,6 +110,8 @@ self.onmessage = (event) => {
         return compile(Module, code);
       case 'execute':
         return execute(Module, code);
+      case 'lint':
+        return lint(Module, code);
       default:
         throw new Error(`Unknown action: ${action}`);
     }

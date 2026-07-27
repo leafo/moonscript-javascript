@@ -10,9 +10,11 @@ class MoonScriptCompiler extends React.Component {
     this.state = {
       codeInput: '',
       lastOutput: '',
+      outputKind: 'code',
       initialLoading: false,
       loading: false,
       executing: false,
+      linting: false,
       version: null,
     };
 
@@ -23,6 +25,7 @@ class MoonScriptCompiler extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.doExecute = this.doExecute.bind(this);
     this.doCompile = this.doCompile.bind(this);
+    this.doLint = this.doLint.bind(this);
     this.tryCompile = this.tryCompile.bind(this);
     this.clearInputTimeout = this.clearInputTimeout.bind(this);
   }
@@ -80,8 +83,33 @@ class MoonScriptCompiler extends React.Component {
 
       this.setState({
         lastOutput: result,
+        outputKind: 'code',
         loading: false,
         executing: false,
+      });
+    });
+  }
+
+  doLint() {
+    this.clearInputTimeout();
+    this.setState({
+      loading: true,
+      linting: true,
+    });
+
+    const { codeInput } = this.state;
+    const toLint = codeInput;
+
+    MoonScript.lint(toLint).then((result) => {
+      if (toLint !== this.state.codeInput) {
+        return;
+      }
+
+      this.setState({
+        lastOutput: result || 'No problems found',
+        outputKind: 'text',
+        loading: false,
+        linting: false,
       });
     });
   }
@@ -102,14 +130,15 @@ class MoonScriptCompiler extends React.Component {
 
       this.setState({
         lastOutput: result,
+        outputKind: 'code',
         loading: false,
       });
     });
   }
 
   tryCompile() {
-    const { initialLoading, executing } = this.state;
-    if (initialLoading || executing) {
+    const { initialLoading, executing, linting } = this.state;
+    if (initialLoading || executing || linting) {
       return;
     }
 
@@ -118,13 +147,15 @@ class MoonScriptCompiler extends React.Component {
   }
 
   render() {
-    const { initialLoading, executing, loading, version, codeInput, lastOutput } = this.state;
+    const { initialLoading, executing, linting, loading, version, codeInput, lastOutput, outputKind } = this.state;
 
     let statusMessage = 'Ready';
     if (initialLoading) {
       statusMessage = 'Warming up compiler...';
     } else if (executing) {
       statusMessage = 'Executing...';
+    } else if (linting) {
+      statusMessage = 'Linting...';
     } else if (loading) {
       statusMessage = 'Compiling...';
     }
@@ -162,6 +193,9 @@ class MoonScriptCompiler extends React.Component {
             onKeyDown={this.handleKeyDown}
           />
           <div className="button_toolbar">
+            <button className="text_button" onClick={this.doLint} type="button">
+              Lint
+            </button>
             <button className="button" onClick={this.doExecute} type="button">
               Execute
             </button>
@@ -170,13 +204,19 @@ class MoonScriptCompiler extends React.Component {
 
         <div className="output_column">
           <div className="output_status">{statusMessage}</div>
-          <pre
-            className="value code_output"
-            key="code_output"
-            dangerouslySetInnerHTML={{
-              __html: this.highlighter.formatText(lastOutput),
-            }}
-          />
+          {outputKind === 'text' ? (
+            <pre className="value code_output" key="code_output">
+              {lastOutput}
+            </pre>
+          ) : (
+            <pre
+              className="value code_output"
+              key="code_output"
+              dangerouslySetInnerHTML={{
+                __html: this.highlighter.formatText(lastOutput),
+              }}
+            />
+          )}
         </div>
       </div>
     );
