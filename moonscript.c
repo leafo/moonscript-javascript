@@ -71,6 +71,10 @@ void setup_lua() {
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
+	// _VERSION lacks the patch level, expose the full "Lua x.y.z" for the UI
+	lua_pushliteral(L, LUA_RELEASE);
+	lua_setglobal(L, "LUA_RELEASE");
+
 	luaopen_lpeg(L);
 	setloaded(L, "lpeg");
 

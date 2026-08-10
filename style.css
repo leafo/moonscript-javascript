@@ -41,6 +41,12 @@ a {
     right: 20px;
     line-height: 50px;
 
+    & .lua_version {
+      color: #888;
+      font-size: 14px;
+      margin-right: 12px;
+    }
+
     & .github_link {
       display: inline-block;
       vertical-align: top;

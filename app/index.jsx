@@ -17,6 +17,7 @@ class MoonScriptCompiler extends React.Component {
       linting: false,
       keepLineNumbers: false,
       version: null,
+      luaVersion: null,
     };
 
     this.highlighter = new LuaHighlighter();
@@ -35,10 +36,11 @@ class MoonScriptCompiler extends React.Component {
   componentDidMount() {
     this.setState({ initialLoading: true });
 
-    MoonScript.getVersion().then((version) => {
+    Promise.all([MoonScript.getVersion(), MoonScript.getLuaVersion()]).then(([version, luaVersion]) => {
       this.setState({
         initialLoading: false,
         version,
+        luaVersion,
       });
 
       this.tryCompile();
@@ -154,7 +156,7 @@ class MoonScriptCompiler extends React.Component {
   }
 
   render() {
-    const { initialLoading, executing, linting, loading, version, codeInput, lastOutput, outputKind, keepLineNumbers } = this.state;
+    const { initialLoading, executing, linting, loading, version, luaVersion, codeInput, lastOutput, outputKind, keepLineNumbers } = this.state;
 
     let statusMessage = 'Ready';
     if (initialLoading) {
@@ -175,6 +177,7 @@ class MoonScriptCompiler extends React.Component {
             ← Return to MoonScript.org
           </a>
           <div className="header_right">
+            {luaVersion && <span className="lua_version">{luaVersion}</span>}
             {initialLoading ? (
               <span className="status_flag loading">Loading...</span>
             ) : (

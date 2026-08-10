@@ -72,4 +72,8 @@ MoonScript.getVersion = function getVersion() {
   return MoonScript.execute("return require('moonscript.version').version");
 };
 
+MoonScript.getLuaVersion = function getLuaVersion() {
+  return MoonScript.execute('return LUA_RELEASE or _VERSION');
+};
+
 export { MoonScript, MoonWorker };
