@@ -14,6 +14,7 @@ EMSCRIPTEN_FLAGS=\
 	--closure 1
 
 FILES=moonscript.c \
+			moonscript/moonscript/parse/native.c \
 			lua-5.3.6/src/lapi.c \
 			lua-5.3.6/src/lauxlib.c \
 			lua-5.3.6/src/lbaselib.c \
@@ -69,10 +70,13 @@ worker/moonscript.js: lua-5.3.6 lpeg-1.1.0 build/moonscript.h $(FILES)
 MOONSCRIPT_LUA=$(shell find moonscript/moonscript moonscript/moon -name '*.lua' 2>/dev/null)
 
 # same recipe the moonscript repo uses to generate bin/binaries/moonscript.h
+# slow/grammar are excluded: the native C parser replaces them, and eagerly
+# loading moonscript here would require moonscript.parse.native before the C
+# module is registered
 build/moonscript.h: $(MOONSCRIPT_LUA)
 	@test -n "$(MOONSCRIPT_LUA)" || { echo "moonscript submodule is empty, run: git submodule update --init"; exit 1; }
 	mkdir -p build
-	cd moonscript && bin/splat.moon -l moonscript moonscript moon > ../build/moonscript.lua
+	cd moonscript && bin/splat.moon -x moonscript.parse.slow -x moonscript.parse.grammar moonscript moon > ../build/moonscript.lua
 	cd build && xxd -i moonscript.lua > moonscript.h
 	rm build/moonscript.lua
 

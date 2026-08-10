@@ -11,6 +11,7 @@
 #define CODE(...) #__VA_ARGS__
 
 int luaopen_lpeg (lua_State *L);
+int luaopen_moonscript_parse_native (lua_State *L);
 
 lua_State* L;
 int default_stack_size;
@@ -72,6 +73,11 @@ void setup_lua() {
 		return;
 	}
 	lua_call(L, 0, 0);
+
+	// the native parser runs callback chunks at load that require
+	// moonscript.parse.tree, so the splat preloads must be registered first
+	luaopen_moonscript_parse_native(L);
+	setloaded(L, "moonscript.parse.native");
 
 	default_stack_size = lua_gettop(L);
 }
