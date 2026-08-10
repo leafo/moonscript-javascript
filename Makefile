@@ -1,7 +1,9 @@
 .PHONY: deploy_targets deploy clean
 
 CC=/usr/lib/emscripten/emcc
-FLAGS=-Ilua-5.3.6/src/ -std=gnu99 -DLUA_COMPAT_5_2 -Oz
+LUA_VERSION=5.5.1
+LUA_DIR=lua-$(LUA_VERSION)
+FLAGS=-I$(LUA_DIR)/src/ -std=gnu99 -Oz
 EMSCRIPTEN_FLAGS=\
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
@@ -15,39 +17,38 @@ EMSCRIPTEN_FLAGS=\
 
 FILES=moonscript.c \
 			moonscript/moonscript/parse/native.c \
-			lua-5.3.6/src/lapi.c \
-			lua-5.3.6/src/lauxlib.c \
-			lua-5.3.6/src/lbaselib.c \
-			lua-5.3.6/src/lbitlib.c \
-			lua-5.3.6/src/lcode.c \
-			lua-5.3.6/src/lcorolib.c \
-			lua-5.3.6/src/lctype.c \
-			lua-5.3.6/src/ldblib.c \
-			lua-5.3.6/src/ldebug.c \
-			lua-5.3.6/src/ldo.c \
-			lua-5.3.6/src/ldump.c \
-			lua-5.3.6/src/lfunc.c \
-			lua-5.3.6/src/lgc.c \
-			lua-5.3.6/src/linit.c \
-			lua-5.3.6/src/liolib.c \
-			lua-5.3.6/src/llex.c \
-			lua-5.3.6/src/lmathlib.c \
-			lua-5.3.6/src/lmem.c \
-			lua-5.3.6/src/loadlib.c \
-			lua-5.3.6/src/lobject.c \
-			lua-5.3.6/src/lopcodes.c \
-			lua-5.3.6/src/loslib.c \
-			lua-5.3.6/src/lparser.c \
-			lua-5.3.6/src/lstate.c \
-			lua-5.3.6/src/lstring.c \
-			lua-5.3.6/src/lstrlib.c \
-			lua-5.3.6/src/ltable.c \
-			lua-5.3.6/src/ltablib.c \
-			lua-5.3.6/src/ltm.c \
-			lua-5.3.6/src/lundump.c \
-			lua-5.3.6/src/lutf8lib.c \
-			lua-5.3.6/src/lvm.c \
-			lua-5.3.6/src/lzio.c \
+			$(LUA_DIR)/src/lapi.c \
+			$(LUA_DIR)/src/lauxlib.c \
+			$(LUA_DIR)/src/lbaselib.c \
+			$(LUA_DIR)/src/lcode.c \
+			$(LUA_DIR)/src/lcorolib.c \
+			$(LUA_DIR)/src/lctype.c \
+			$(LUA_DIR)/src/ldblib.c \
+			$(LUA_DIR)/src/ldebug.c \
+			$(LUA_DIR)/src/ldo.c \
+			$(LUA_DIR)/src/ldump.c \
+			$(LUA_DIR)/src/lfunc.c \
+			$(LUA_DIR)/src/lgc.c \
+			$(LUA_DIR)/src/linit.c \
+			$(LUA_DIR)/src/liolib.c \
+			$(LUA_DIR)/src/llex.c \
+			$(LUA_DIR)/src/lmathlib.c \
+			$(LUA_DIR)/src/lmem.c \
+			$(LUA_DIR)/src/loadlib.c \
+			$(LUA_DIR)/src/lobject.c \
+			$(LUA_DIR)/src/lopcodes.c \
+			$(LUA_DIR)/src/loslib.c \
+			$(LUA_DIR)/src/lparser.c \
+			$(LUA_DIR)/src/lstate.c \
+			$(LUA_DIR)/src/lstring.c \
+			$(LUA_DIR)/src/lstrlib.c \
+			$(LUA_DIR)/src/ltable.c \
+			$(LUA_DIR)/src/ltablib.c \
+			$(LUA_DIR)/src/ltm.c \
+			$(LUA_DIR)/src/lundump.c \
+			$(LUA_DIR)/src/lutf8lib.c \
+			$(LUA_DIR)/src/lvm.c \
+			$(LUA_DIR)/src/lzio.c \
 			lpeg-1.1.0/lpcap.c \
 			lpeg-1.1.0/lpcode.c \
 			lpeg-1.1.0/lpcset.c \
@@ -64,7 +65,7 @@ moonscript-worker.js: worker/moonscript.js $(wildcard worker/*.js)
 moonscript.js: moonscript-worker.js app/moonscript.js
 	npx esbuild --bundle app/moonscript.js --format=esm --minify --sourcemap --outfile=$@
 
-worker/moonscript.js: lua-5.3.6 lpeg-1.1.0 build/moonscript.h $(FILES)
+worker/moonscript.js: $(LUA_DIR) lpeg-1.1.0 build/moonscript.h $(FILES)
 	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $(FILES) -o $@
 
 MOONSCRIPT_LUA=$(shell find moonscript/moonscript moonscript/moon -name '*.lua' 2>/dev/null)
@@ -80,9 +81,9 @@ build/moonscript.h: $(MOONSCRIPT_LUA)
 	cd build && xxd -i moonscript.lua > moonscript.h
 	rm build/moonscript.lua
 
-lua-5.3.6:
-	curl -O https://www.lua.org/ftp/lua-5.3.6.tar.gz
-	tar xzf lua-5.3.6.tar.gz
+$(LUA_DIR):
+	curl -O https://www.lua.org/ftp/$(LUA_DIR).tar.gz
+	tar xzf $(LUA_DIR).tar.gz
 
 lpeg-1.1.0:
 	curl -O https://www.inf.puc-rio.br/~roberto/lpeg/lpeg-1.1.0.tar.gz
