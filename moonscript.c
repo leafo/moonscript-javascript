@@ -16,8 +16,14 @@ int luaopen_moonscript_parse_native (lua_State *L);
 lua_State* L;
 int default_stack_size;
 
+// options_src is a Lua table literal (eg. "{ correlate = true }") or empty
 const char* moonscript_to_lua_src = CODE(
-	return require('moonscript.base').to_lua(...)
+	local input, options_src = ...
+	local options
+	if options_src and options_src ~= "" then
+		options = assert(load("return " .. options_src, "options", "t", {}))()
+	end
+	return require('moonscript.base').to_lua(input, options)
 );
 
 const char* execute_moonscript_src = CODE(
@@ -114,7 +120,7 @@ const char* lint_moonscript(const char* input) {
 	return lua_tostring(L, -1);
 }
 
-const char* compile_moonscript(const char* input) {
+const char* compile_moonscript(const char* input, const char* options) {
 	setup_lua();
 	lua_pop(L, lua_gettop(L) - default_stack_size);
 
@@ -123,7 +129,8 @@ const char* compile_moonscript(const char* input) {
 	}
 
 	lua_pushstring(L, input);
-	int res = lua_pcall(L, 1, 2, 0);
+	lua_pushstring(L, options ? options : "");
+	int res = lua_pcall(L, 2, 2, 0);
 
 	// this will return either:
 	// 1. compiled code

@@ -15,6 +15,7 @@ class MoonScriptCompiler extends React.Component {
       loading: false,
       executing: false,
       linting: false,
+      keepLineNumbers: false,
       version: null,
     };
 
@@ -23,6 +24,7 @@ class MoonScriptCompiler extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleKeepLinesChange = this.handleKeepLinesChange.bind(this);
     this.doExecute = this.doExecute.bind(this);
     this.doCompile = this.doCompile.bind(this);
     this.doLint = this.doLint.bind(this);
@@ -57,6 +59,10 @@ class MoonScriptCompiler extends React.Component {
       event.preventDefault();
       this.doExecute();
     }
+  }
+
+  handleKeepLinesChange(event) {
+    this.setState({ keepLineNumbers: event.target.checked }, this.tryCompile);
   }
 
   clearInputTimeout() {
@@ -120,11 +126,12 @@ class MoonScriptCompiler extends React.Component {
       loading: true,
     });
 
-    const { codeInput } = this.state;
+    const { codeInput, keepLineNumbers } = this.state;
     const toCompile = codeInput;
+    const options = keepLineNumbers ? { correlate: true } : null;
 
-    MoonScript.compile(toCompile).then((result) => {
-      if (toCompile !== this.state.codeInput) {
+    MoonScript.compile(toCompile, options).then((result) => {
+      if (toCompile !== this.state.codeInput || keepLineNumbers !== this.state.keepLineNumbers) {
         return;
       }
 
@@ -147,7 +154,7 @@ class MoonScriptCompiler extends React.Component {
   }
 
   render() {
-    const { initialLoading, executing, linting, loading, version, codeInput, lastOutput, outputKind } = this.state;
+    const { initialLoading, executing, linting, loading, version, codeInput, lastOutput, outputKind, keepLineNumbers } = this.state;
 
     let statusMessage = 'Ready';
     if (initialLoading) {
@@ -193,6 +200,14 @@ class MoonScriptCompiler extends React.Component {
             onKeyDown={this.handleKeyDown}
           />
           <div className="button_toolbar">
+            <label className="option_checkbox">
+              <input
+                type="checkbox"
+                checked={keepLineNumbers}
+                onChange={this.handleKeepLinesChange}
+              />
+              Keep line numbers
+            </label>
             <button className="text_button" onClick={this.doLint} type="button">
               Lint
             </button>

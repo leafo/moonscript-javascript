@@ -153,7 +153,28 @@ a {
 
 .button_toolbar {
   margin-top: 10px;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.option_checkbox {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #888;
+  user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #444;
+  }
+
+  input {
+    cursor: pointer;
+  }
 }
 
 .text_button {

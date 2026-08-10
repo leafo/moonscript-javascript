@@ -41,13 +41,13 @@ MoonScript.getWorker = function getWorker() {
   return MoonScript.worker;
 };
 
-MoonScript.compile = function compile(code) {
+MoonScript.compile = function compile(code, options) {
   if (!code) {
     return blankPromise;
   }
 
   const worker = MoonScript.getWorker();
-  return worker.send('compile', code);
+  return worker.send('compile', code, options);
 };
 
 MoonScript.lint = function lint(code) {

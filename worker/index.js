@@ -65,11 +65,26 @@ const withModule = async (handler) => {
   return handler(Module);
 };
 
-const compile = (Module, code) => {
+const luaTableLiteral = (options) => {
+  const fields = Object.entries(options || {}).map(([key, value]) => {
+    switch (typeof value) {
+      case 'boolean':
+      case 'number':
+        return `${key} = ${value}`;
+      case 'string':
+        return `${key} = ${JSON.stringify(value)}`;
+      default:
+        throw new Error(`Unsupported option value for ${key}`);
+    }
+  });
+  return fields.length ? `{ ${fields.join(', ')} }` : '';
+};
+
+const compile = (Module, code, options) => {
   const originalHandler = moduleConfig.printHandler;
   try {
     moduleConfig.printHandler = console.log;
-    return Module.ccall('compile_moonscript', 'string', ['string'], [code]);
+    return Module.ccall('compile_moonscript', 'string', ['string', 'string'], [code, luaTableLiteral(options)]);
   } finally {
     moduleConfig.printHandler = originalHandler;
   }
@@ -102,12 +117,12 @@ const execute = (Module, code) => {
 };
 
 self.onmessage = (event) => {
-  const [id, action, code] = event.data;
+  const [id, action, code, options] = event.data;
 
   withModule((Module) => {
     switch (action) {
       case 'compile':
-        return compile(Module, code);
+        return compile(Module, code, options);
       case 'execute':
         return execute(Module, code);
       case 'lint':
