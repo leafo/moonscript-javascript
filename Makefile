@@ -1,4 +1,4 @@
-.PHONY: deploy_targets deploy clean
+.PHONY: deploy_targets deploy clean bust_versions
 
 CC=/usr/lib/emscripten/emcc
 BUILD_ID:=$(shell date +%s)
@@ -95,7 +95,13 @@ deploy_targets:
 	@echo index.html style.css app.js moonscript-worker.js moonscript.wasm moonscript.js img/github-icon.svg .htaccess
 	@find -L ./fonts -type f -name '*.woff' -o -name '*.woff2' -o -name 'stylesheet.css' | sed 's|^\./||'
 
-deploy: app.js moonscript.js moonscript-worker.js
+# restamp the asset urls in index.html so CDN/browser caches can't serve stale
+# copies: the html itself is never edge-cached, so a deploy takes effect
+# immediately
+bust_versions:
+	sed -i -E 's/\?v=[0-9a-z-]+/?v=$(BUILD_ID)/g' index.html
+
+deploy: app.js moonscript.js moonscript-worker.js bust_versions
 	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/moonscript.org/compiler
 
 clean:

@@ -9,8 +9,8 @@
   execute code interactively in your browser without having to install
   anything." />
 
-  <link rel="stylesheet" href="fonts/stylesheet.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="fonts/stylesheet.css?v=1786456462" />
+  <link rel="stylesheet" href="style.css?v=1786456462" />
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -32,7 +32,7 @@
 <body>
   <div id="body"></div>
   <script type="module">
-    const {render} = await import(`./app.js?v=${Date.now()}`);
+    import {render} from "./app.js?v=1786456462"
     render("#body");
   </script>
 </body>
