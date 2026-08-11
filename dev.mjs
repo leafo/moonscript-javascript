@@ -9,6 +9,7 @@ const ctx = await esbuild.context({
   format: 'esm',
   sourcemap: true,
   outdir: '.',
+  define: { BUILD_ID: JSON.stringify(`dev-${Date.now()}`) },
 });
 
 await ctx.watch();

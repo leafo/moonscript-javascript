@@ -1,7 +1,9 @@
 import moonscript from './moonscript.js';
 
+const buildId = typeof BUILD_ID === 'string' ? BUILD_ID : 'dev';
+
 const moduleConfig = {
-  locateFile: (path) => path,
+  locateFile: (path) => `${path}?v=${buildId}`,
   print: (text) => {
     if (moduleConfig.printHandler) {
       moduleConfig.printHandler(text);

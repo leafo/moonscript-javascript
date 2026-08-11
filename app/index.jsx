@@ -18,6 +18,7 @@ class MoonScriptCompiler extends React.Component {
       keepLineNumbers: false,
       version: null,
       luaVersion: null,
+      loadError: null,
     };
 
     this.highlighter = new LuaHighlighter();
@@ -44,6 +45,13 @@ class MoonScriptCompiler extends React.Component {
       });
 
       this.tryCompile();
+    }).catch((err) => {
+      this.setState({
+        initialLoading: false,
+        loadError: err.message,
+        lastOutput: `Failed to load compiler: ${err.message}`,
+        outputKind: 'text',
+      });
     });
   }
 
@@ -95,6 +103,13 @@ class MoonScriptCompiler extends React.Component {
         loading: false,
         executing: false,
       });
+    }).catch((err) => {
+      this.setState({
+        lastOutput: `Error: ${err.message}`,
+        outputKind: 'text',
+        loading: false,
+        executing: false,
+      });
     });
   }
 
@@ -115,6 +130,13 @@ class MoonScriptCompiler extends React.Component {
 
       this.setState({
         lastOutput: result || 'No problems found',
+        outputKind: 'text',
+        loading: false,
+        linting: false,
+      });
+    }).catch((err) => {
+      this.setState({
+        lastOutput: `Error: ${err.message}`,
         outputKind: 'text',
         loading: false,
         linting: false,
@@ -142,6 +164,12 @@ class MoonScriptCompiler extends React.Component {
         outputKind: 'code',
         loading: false,
       });
+    }).catch((err) => {
+      this.setState({
+        lastOutput: `Error: ${err.message}`,
+        outputKind: 'text',
+        loading: false,
+      });
     });
   }
 
@@ -156,7 +184,7 @@ class MoonScriptCompiler extends React.Component {
   }
 
   render() {
-    const { initialLoading, executing, linting, loading, version, luaVersion, codeInput, lastOutput, outputKind, keepLineNumbers } = this.state;
+    const { initialLoading, executing, linting, loading, version, luaVersion, codeInput, lastOutput, outputKind, keepLineNumbers, loadError } = this.state;
 
     let statusMessage = 'Ready';
     if (initialLoading) {
@@ -178,7 +206,9 @@ class MoonScriptCompiler extends React.Component {
           </a>
           <div className="header_right">
             {luaVersion && <span className="lua_version">{luaVersion}</span>}
-            {initialLoading ? (
+            {loadError ? (
+              <span className="status_flag error" title={loadError}>Load failed</span>
+            ) : initialLoading ? (
               <span className="status_flag loading">Loading...</span>
             ) : (
               <a

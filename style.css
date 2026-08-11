@@ -79,6 +79,10 @@ a {
     &.ready {
       background: #8eb17d;
     }
+
+    &.error {
+      background: #c05b5b;
+    }
   }
 }
 

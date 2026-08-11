@@ -1,7 +1,10 @@
+// build-time constant for cache busting
+const buildId = typeof BUILD_ID === 'string' ? BUILD_ID : 'dev';
+
 class MoonWorker {
   constructor() {
     this.id = 0;
-    this.worker = new Worker(new URL('moonscript-worker.js', import.meta.url), { type: 'module' });
+    this.worker = new Worker(new URL(`moonscript-worker.js?v=${buildId}`, import.meta.url), { type: 'module' });
     this.listeners = {};
 
     this.worker.onmessage = (event) => {
@@ -20,8 +23,14 @@ class MoonWorker {
 
     this.worker.postMessage([sendId, ...args]);
 
-    return new Promise((resolve) => {
-      this.listen(sendId, resolve);
+    return new Promise((resolve, reject) => {
+      this.listen(sendId, (result) => {
+        if (result && typeof result === 'object' && result.error) {
+          reject(new Error(result.error));
+        } else {
+          resolve(result);
+        }
+      });
     });
   }
 

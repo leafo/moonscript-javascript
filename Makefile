@@ -1,6 +1,8 @@
 .PHONY: deploy_targets deploy clean
 
 CC=/usr/lib/emscripten/emcc
+BUILD_ID:=$(shell date +%s)
+ESBUILD_DEFINES=--define:BUILD_ID='"$(BUILD_ID)"'
 LUA_VERSION=5.5.1
 LUA_DIR=lua-$(LUA_VERSION)
 FLAGS=-I$(LUA_DIR)/src/ -std=gnu99 -Oz
@@ -57,13 +59,13 @@ FILES=moonscript.c \
 			lpeg-1.1.0/lpvm.c
 
 app.js: app/index.jsx $(wildcard app/*.js) moonscript-worker.js
-	npx esbuild --bundle app/index.jsx --format=esm --minify --sourcemap --outfile=$@
+	npx esbuild --bundle app/index.jsx --format=esm --minify --sourcemap $(ESBUILD_DEFINES) --outfile=$@
 
 moonscript-worker.js: worker/moonscript.js $(wildcard worker/*.js)
-	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap --outfile=$@
+	npx esbuild --bundle worker/index.js --format=esm --minify --sourcemap $(ESBUILD_DEFINES) --outfile=$@
 
 moonscript.js: moonscript-worker.js app/moonscript.js
-	npx esbuild --bundle app/moonscript.js --format=esm --minify --sourcemap --outfile=$@
+	npx esbuild --bundle app/moonscript.js --format=esm --minify --sourcemap $(ESBUILD_DEFINES) --outfile=$@
 
 worker/moonscript.js: $(LUA_DIR) lpeg-1.1.0 build/moonscript.h $(FILES)
 	$(CC) $(FLAGS) $(EMSCRIPTEN_FLAGS) $(FILES) -o $@
