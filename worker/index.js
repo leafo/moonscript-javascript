@@ -3,7 +3,9 @@ import moonscript from './moonscript.js';
 const buildId = typeof BUILD_ID === 'string' ? BUILD_ID : 'dev';
 
 const moduleConfig = {
-  locateFile: (path) => `${path}?v=${buildId}`,
+  // Anchor to the module's own directory so the worker also works when
+  // imported from another origin, where relative paths have no usable base
+  locateFile: (path, scriptDirectory) => `${scriptDirectory || ''}${path}?v=${buildId}`,
   print: (text) => {
     if (moduleConfig.printHandler) {
       moduleConfig.printHandler(text);
